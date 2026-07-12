@@ -613,3 +613,5 @@ Przed przebudową kodu należy przygotować szczegółowy wireframe `Type Analys
 - przejście do powiązanych przykładów z życia.
 
 Ten ekran jest testem całej koncepcji Akashy. Jeśli okaże się czytelny i użyteczny na prawdziwej osobie, kolejne zakładki mogą być budowane wokół niego bez zgadywania.
+
+Pierwszy konkretny wireframe został rozpisany w `docs/type-analysis-wireframe-istp.md`. Używa hipotezy ISTP, pełnej macierzy funkcji i bloków oraz anonimizuje dane prawdziwej osoby, które docelowo należą do lokalnej bazy aplikacji.
