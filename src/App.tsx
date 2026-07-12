@@ -17,6 +17,7 @@ import {
 import "./App.css";
 import type { Task, TaskArea } from "./features/tasks/taskStorage";
 import { loadTasks, saveTasks } from "./features/tasks/taskStorage";
+import FriendsView from "./features/friends/FriendsView";
 
 const AREA_LABELS: Record<TaskArea, string> = {
   personal: "Personal",
@@ -26,11 +27,13 @@ const AREA_LABELS: Record<TaskArea, string> = {
 };
 
 const NAV_ITEMS = [
-  { label: "Dashboard", icon: LayoutDashboard, active: true },
-  { label: "Friends", icon: Users, soon: true },
+  { label: "Dashboard", icon: LayoutDashboard, view: "dashboard" },
+  { label: "Friends", icon: Users, view: "friends" },
   { label: "Work", icon: BriefcaseBusiness, soon: true },
   { label: "Sport", icon: Dumbbell, soon: true },
 ];
+
+type AppView = "dashboard" | "friends";
 
 function CrocodileMark() {
   return (
@@ -60,20 +63,27 @@ function App() {
   const [newTask, setNewTask] = useState("");
   const [newTaskArea, setNewTaskArea] = useState<TaskArea>("personal");
   const [showCompleted, setShowCompleted] = useState(true);
+  const [activeView, setActiveView] = useState<AppView>("dashboard");
+  const [friendCreateSignal, setFriendCreateSignal] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => saveTasks(tasks), [tasks]);
 
   useEffect(() => {
+    document.querySelector<HTMLElement>(".main-content")?.scrollTo({ top: 0, behavior: "instant" });
+  }, [activeView]);
+
+  useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "n") {
         event.preventDefault();
-        inputRef.current?.focus();
+        if (activeView === "friends") setFriendCreateSignal((value) => value + 1);
+        else inputRef.current?.focus();
       }
     };
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, []);
+  }, [activeView]);
 
   const now = new Date();
   const dateLabel = new Intl.DateTimeFormat("en-GB", {
@@ -134,14 +144,16 @@ function App() {
 
         <nav className="primary-nav" aria-label="Main navigation">
           <span className="nav-heading">Your spaces</span>
-          {NAV_ITEMS.map(({ label, icon: Icon, active, soon }) => (
-            <button className={`nav-item ${active ? "active" : ""}`} key={label} disabled={soon} aria-current={active ? "page" : undefined}>
+          {NAV_ITEMS.map(({ label, icon: Icon, view, soon }) => {
+            const active = view === activeView;
+            return (
+            <button className={`nav-item ${active ? "active" : ""}`} key={label} disabled={soon} onClick={() => view && setActiveView(view as AppView)} aria-current={active ? "page" : undefined}>
               <Icon size={18} strokeWidth={1.8} />
               <span>{label}</span>
               {soon && <span className="soon">Soon</span>}
               {active && <ChevronRight className="nav-arrow" size={15} />}
             </button>
-          ))}
+          )})}
         </nav>
 
         <div className="sidebar-footer">
@@ -156,9 +168,9 @@ function App() {
 
       <main className="main-content">
         <header className="topbar">
-          <button className="search-trigger" onClick={() => inputRef.current?.focus()} aria-label="Quick add a task">
-            <Search size={16} />
-            <span>Quick add a task</span>
+          <button className="search-trigger" onClick={() => activeView === "friends" ? setFriendCreateSignal((value) => value + 1) : inputRef.current?.focus()} aria-label={activeView === "friends" ? "Add a friend" : "Quick add a task"}>
+            {activeView === "friends" ? <Plus size={16} /> : <Search size={16} />}
+            <span>{activeView === "friends" ? "Add a friend" : "Quick add a task"}</span>
             <kbd>Ctrl N</kbd>
           </button>
           <div className="topbar-actions">
@@ -167,7 +179,7 @@ function App() {
           </div>
         </header>
 
-        <div className="dashboard">
+        {activeView === "friends" ? <FriendsView createSignal={friendCreateSignal} /> : <div className="dashboard">
           <section className="welcome-row">
             <div>
               <span className="eyebrow"><Sparkles size={13} /> Daily orientation</span>
@@ -261,7 +273,7 @@ function App() {
               </section>
             </aside>
           </div>
-        </div>
+        </div>}
       </main>
     </div>
   );
