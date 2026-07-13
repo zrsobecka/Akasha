@@ -1,37 +1,28 @@
 # Akasha local Windows build
 
-This folder holds the local Windows executable used by the desktop shortcut.
+`app/Akasha.exe` is the portable Windows x64 artifact used by `%USERPROFILE%\Desktop\Akasha.lnk`.
 
 ## Current artifact
 
-- File: `Akasha.exe`
-- Version: `0.1.0`
-- Target: Windows x64, local portable executable
-- Build command (PowerShell): `$env:CARGO_TARGET_DIR = "$env:TEMP\akasha-tauri-target"; npm run tauri -- build --no-bundle`
-- SHA-256: `45727A6E96ED3905E8744CAA8E94B995D523AF0C34FF6927DAA47BFA1EF04EF1`
-- Built: 2026-07-13
+| Field   | Value                                                              |
+| ------- | ------------------------------------------------------------------ |
+| Version | `0.1.0`                                                            |
+| Built   | 2026-07-13                                                         |
+| SHA-256 | `45727A6E96ED3905E8744CAA8E94B995D523AF0C34FF6927DAA47BFA1EF04EF1` |
 
-The executable embeds the production Vite/Tailwind frontend and does not depend on the development server.
+The executable embeds the production frontend and does not require the Vite development server. Profiles and observations remain in the current user's Tauri WebView storage; they are not embedded in the executable.
 
-The Cargo target stays outside Dropbox because synchronized `target` archives can be locked during Rust compilation on this machine.
+## Rebuild
 
-## Desktop shortcut
+Keep Cargo output outside Dropbox because synchronized `target` directories can be locked during compilation:
 
-`%USERPROFILE%\Desktop\Akasha.lnk` points to `app\Akasha.exe`. Replacing the executable at the same path keeps the shortcut valid.
+```powershell
+$env:CARGO_TARGET_DIR = "$env:TEMP\akasha-tauri-target"
+npm run tauri -- build --no-bundle
+```
 
-## Local data
-
-Person profiles are stored by the Tauri WebView in the current Windows user profile. They are not embedded in this executable or committed to Git.
-
-## Local AI suggestions
-
-- Akasha discovers language models from the LM Studio server on `127.0.0.1:1234`.
-- Requests go through the Tauri backend because LM Studio does not answer the WebView's CORS preflight reliably; do not move these calls back to browser `fetch`.
-- Start the server with `lms server start` or from LM Studio's Developer tab.
-- Only the observation, current type and its eight-function catalog are sent to the local server.
-- Model suggestions remain uncertain and are saved as links only after user confirmation.
-- Manual function selection remains available when LM Studio is offline.
+Copy the resulting executable to `app/Akasha.exe`. Replacing it at the same path preserves the desktop shortcut.
 
 ## Release status
 
-This is an unsigned local development build. It was launched successfully from the final `app\Akasha.exe` path on the development machine. It has not been verified in Windows Sandbox or on a separate clean machine, so it is not a public distribution-ready release.
+This is an unsigned personal development build. It has run successfully from the final path on this machine, but it has not been verified on a clean Windows installation and is not ready for public distribution.
