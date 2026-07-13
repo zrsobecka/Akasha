@@ -1,8 +1,20 @@
 export const PERSONALITY_TYPES = [
-  "ENFJ", "ENFP", "ENTJ", "ENTP",
-  "ESFJ", "ESFP", "ESTJ", "ESTP",
-  "INFJ", "INFP", "INTJ", "INTP",
-  "ISFJ", "ISFP", "ISTJ", "ISTP",
+  "ENFJ",
+  "ENFP",
+  "ENTJ",
+  "ENTP",
+  "ESFJ",
+  "ESFP",
+  "ESTJ",
+  "ESTP",
+  "INFJ",
+  "INFP",
+  "INTJ",
+  "INTP",
+  "ISFJ",
+  "ISFP",
+  "ISTJ",
+  "ISTP",
 ] as const;
 
 export type PersonalityType = (typeof PERSONALITY_TYPES)[number] | "";
@@ -30,16 +42,18 @@ const STORAGE_KEY = "akasha.friends.v1";
 function isFriend(value: unknown): value is Friend {
   if (!value || typeof value !== "object") return false;
   const friend = value as Partial<Friend>;
-  return typeof friend.id === "string"
-    && typeof friend.name === "string"
-    && typeof friend.personalityType === "string"
-    && typeof friend.relationship === "string"
-    && typeof friend.communication === "string"
-    && typeof friend.motivates === "string"
-    && typeof friend.avoid === "string"
-    && typeof friend.needs === "string"
-    && typeof friend.notes === "string"
-    && typeof friend.updatedAt === "string";
+  return (
+    typeof friend.id === "string" &&
+    typeof friend.name === "string" &&
+    typeof friend.personalityType === "string" &&
+    typeof friend.relationship === "string" &&
+    typeof friend.communication === "string" &&
+    typeof friend.motivates === "string" &&
+    typeof friend.avoid === "string" &&
+    typeof friend.needs === "string" &&
+    typeof friend.notes === "string" &&
+    typeof friend.updatedAt === "string"
+  );
 }
 
 export function loadFriends(): Friend[] {
