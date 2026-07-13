@@ -353,7 +353,7 @@ export default function SocionicsWorkspace() {
               <span>
                 <strong>{person.name}</strong>
                 <small>
-                  {person.typeId} · {person.confidence}
+                  {person.typeId} · {person.relationship || "Not set"}
                 </small>
               </span>
             </button>

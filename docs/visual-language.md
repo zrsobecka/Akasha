@@ -38,4 +38,6 @@ Spacing uses `4, 8, 12, 16, 24, 32, 48, 64`. Control, panel, and feature radii a
 
 Use a restrained sans-serif system stack for reading. Reserve monospace for type codes, function notation, shortcuts, and machine status. Lucide icons are normally `15–20px` and need labels when meaning is not universal.
 
+Use the shared typography tokens from `src/App.css`: micro `10px`, caption `11px`, small `12px`, body `13px`, and strong body `14px`. Do not add interface text below `10px`; increase hierarchy through weight, color, and spacing instead of shrinking labels.
+
 Controls require visible hover, active, focus-visible, and disabled states. Empty evidence should invite one next action without implying that theory is confirmed. Akasha must remain usable at compact desktop widths and by keyboard.
