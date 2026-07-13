@@ -8,7 +8,7 @@
 | ------- | ------------------------------------------------------------------ |
 | Version | `0.1.0`                                                            |
 | Built   | 2026-07-13                                                         |
-| SHA-256 | `45727A6E96ED3905E8744CAA8E94B995D523AF0C34FF6927DAA47BFA1EF04EF1` |
+| SHA-256 | `00FFEE6E9FB8B39422CC50C1644C409B86F01198E7D231E6F4CEFC208605AF52` |
 
 The executable embeds the production frontend and does not require the Vite development server. Profiles and observations remain in the current user's Tauri WebView storage; they are not embedded in the executable.
 

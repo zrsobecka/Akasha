@@ -192,13 +192,11 @@ Każdy węzeł może otworzyć definicję i źródło reguły.
 
 Wymagane stany: brak typu, brak przykładów, sprzeczna obserwacja, niekompletne źródło i konflikt źródeł. Konflikt pokazuje obie wartości i ich pochodzenie; UI nie wybiera cicho jednej wersji.
 
-## 11. Znany konflikt ISTP
+## 11. Konwencja nazewnictwa ISTP
 
-- `Types/ISTP.md`: `Temperament: IJ (Balanced-Stable)`;
-- `Groups/Temperament.md`: ISTP należy do `IP (Receptive-Adaptive)`;
-- reguła E/I + P/J również wskazuje IP.
+Kanoniczny identyfikator używa konwencji MBTI: `ISTP` oznacza TiSe i należy do temperamentu `IP / Receptive-Adaptive`. Socjoniczne `ISTj` jest wyłącznie nazwą alternatywną zapisaną z małym `j`.
 
-Robocza wartość dla Groups to `IP / Receptive-Adaptive`, ale źródło typu wymaga świadomej korekty albo wyjaśnienia przed uznaniem wyniku za kanoniczny. Konflikt nie zmienia stosu ośmiu funkcji.
+Temperament i relacje są wyprowadzane ze stosu funkcji oraz kanonicznego ID, nie z ostatniej litery nazwy alternatywnej. Dlatego `ENFP ↔ ISTP` jest relacją Conflict, a dualem `ENFP` jest `ISTJ` (SiTe; alternatywnie `ISTp`).
 
 ## 12. Kryteria akceptacji
 
@@ -222,6 +220,6 @@ Robocza wartość dla Groups to `IP / Receptive-Adaptive`, ale źródło typu wy
 - `Model/Rings.md`;
 - `Model/Blocks.md`;
 - `Descriptions/Function Manifestation.md`;
-- `Groups/Temperament.md` — dla konfliktu z sekcji 11.
+- `Groups/Temperament.md` — dla zgodnego temperamentu z sekcji 11.
 
 `Drafts`, Legacy, Sources i Archive nie są tu źródłami kanonicznymi.

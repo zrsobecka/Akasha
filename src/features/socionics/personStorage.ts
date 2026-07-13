@@ -22,7 +22,9 @@ function isPersonRecord(value: unknown): value is PersonRecord {
   return (
     typeof person.id === "string" &&
     typeof person.name === "string" &&
-    (person.typeId === "ISTP" || person.typeId === "ENFP") &&
+    (person.typeId === "ISTP" ||
+      person.typeId === "ISTJ" ||
+      person.typeId === "ENFP") &&
     typeof person.relationship === "string" &&
     (person.confidence === "Exploring" ||
       person.confidence === "Working" ||

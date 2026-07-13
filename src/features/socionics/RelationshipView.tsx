@@ -89,7 +89,9 @@ export default function RelationshipView({
       <section className="empty-panel">
         <TriangleAlert size={24} />
         <h2>This pair is not mapped in the prototype yet</h2>
-        <p>The first vertical slice currently supports ISTP ↔ ENFP.</p>
+        <p>
+          The current slice derives symmetric relations from supported stacks.
+        </p>
       </section>
     );
   }
@@ -115,7 +117,7 @@ export default function RelationshipView({
           <Sparkles size={16} />
           <div>
             <strong>{relationship.name}</strong>
-            <small>model-defined complement</small>
+            <small>{relationship.family}</small>
           </div>
         </div>
       </section>
@@ -135,19 +137,6 @@ export default function RelationshipView({
         <DirectionPanel from={person} to={other} channels={relationship.aToB} />
         <DirectionPanel from={other} to={person} channels={relationship.bToA} />
       </div>
-
-      <section className="source-conflict">
-        <TriangleAlert size={16} />
-        <div>
-          <strong>Source taxonomy needs review</strong>
-          <p>
-            The type notes identify this pair as Dual, while their recorded
-            quadras differ and the relation taxonomy describes Dual as
-            same-quadra. Akasha preserves the relation but does not hide the
-            conflict.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }

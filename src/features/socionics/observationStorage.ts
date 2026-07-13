@@ -57,7 +57,9 @@ function isObservation(value: unknown): value is ObservationRecord {
     RATINGS.includes(observation.rating as EvidenceRating) &&
     typeof observation.createdAt === "string" &&
     !!target &&
-    (target.typeId === "ISTP" || target.typeId === "ENFP") &&
+    (target.typeId === "ISTP" ||
+      target.typeId === "ISTJ" ||
+      target.typeId === "ENFP") &&
     Number.isInteger(target.positionId) &&
     typeof target.element === "string" &&
     typeof target.positionName === "string" &&

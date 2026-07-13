@@ -1,4 +1,5 @@
-export type TypeId = "ISTP" | "ENFP";
+export const SUPPORTED_TYPES = ["ISTP", "ISTJ", "ENFP"] as const;
+export type TypeId = (typeof SUPPORTED_TYPES)[number];
 export type ElementId = "Ti" | "Te" | "Fi" | "Fe" | "Si" | "Se" | "Ni" | "Ne";
 export type PositionId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export type AnalysisView = "positions" | "aspects" | "dimensions";
@@ -31,7 +32,7 @@ export interface TypeProfile {
   id: TypeId;
   core: string;
   leadingSign: string;
-  frame: string;
+  alternativeName: string;
   labels: string;
   quadra: string;
   club: string;
@@ -52,11 +53,14 @@ export interface RelationshipChannel {
   to: ElementId;
   toPosition: string;
   summary: string;
-  layer: "Ego → Subconscious" | "Shadow → Super-Ego";
+  layer: string;
 }
 
+export type RelationshipName =
+  "Identity" | "Dual" | "Quasi-Identity" | "Conflict";
+
 export interface RelationshipAnalysis {
-  name: "Dual";
+  name: RelationshipName;
   family: string;
   summary: string;
   caution: string;
@@ -283,11 +287,9 @@ const TYPE_DATA: Record<
   {
     core: string;
     leadingSign: string;
-    frame: string;
     labels: string;
     quadra: string;
     club: string;
-    temperament: string;
     stack: readonly ElementId[];
     summaries: readonly { overview: string; growth: string }[];
   }
@@ -295,11 +297,9 @@ const TYPE_DATA: Record<
   ISTP: {
     core: "TiSe",
     leadingSign: "Ti+",
-    frame: "ISTj",
-    labels: "SLI · LSI",
+    labels: "LSI",
     quadra: "Beta",
     club: "Pragmatists",
-    temperament: "IP · Receptive-adaptive*",
     stack: ["Ti", "Se", "Ni", "Fe", "Te", "Si", "Ne", "Fi"],
     summaries: [
       {
@@ -352,14 +352,70 @@ const TYPE_DATA: Record<
       },
     ],
   },
+  ISTJ: {
+    core: "SiTe",
+    leadingSign: "Si+",
+    labels: "SLI",
+    quadra: "Delta",
+    club: "Pragmatists",
+    stack: ["Si", "Te", "Fi", "Ne", "Se", "Ti", "Fe", "Ni"],
+    summaries: [
+      {
+        overview:
+          "Accumulated experience, continuity and embodied stability form the primary lens for understanding what is reliable.",
+        growth:
+          "Keep trusted experience available without letting it close the door on useful new evidence.",
+      },
+      {
+        overview:
+          "Adapts external evidence, organization and practical execution to the needs of the situation.",
+        growth:
+          "Let efficiency support durable outcomes instead of becoming an end in itself.",
+      },
+      {
+        overview:
+          "Feels energized by clear personal values, trustworthy bonds and choices that carry individual meaning.",
+        growth:
+          "Name what matters personally rather than relying only on duty or established practice.",
+      },
+      {
+        overview:
+          "Values fresh possibilities and alternative meanings while feeling less certain about generating them independently.",
+        growth:
+          "Explore several plausible options before committing to the familiar one.",
+      },
+      {
+        overview:
+          "Can apply direct force and immediate action strongly, but may dismiss them when they do not serve a practical need.",
+        growth:
+          "Use decisive pressure deliberately when waiting would create a larger cost.",
+      },
+      {
+        overview:
+          "Structural logic and internal consistency run quietly in the background without needing to define identity.",
+        growth:
+          "Surface the reasoning when shared clarity matters more than silent correctness.",
+      },
+      {
+        overview:
+          "Shared emotional atmosphere and expressive expectations can be simplified or noticed only after tension appears.",
+        growth:
+          "Check emotional impact explicitly instead of assuming practical care communicates itself.",
+      },
+      {
+        overview:
+          "A single future trajectory can feel difficult to trust, especially when pressure turns uncertainty into foreboding.",
+        growth:
+          "Separate grounded prediction from fear and choose a direction without demanding certainty.",
+      },
+    ],
+  },
   ENFP: {
     core: "NeFi",
     leadingSign: "Ne−",
-    frame: "ENFp",
-    labels: "IEE · IEE",
+    labels: "IEE",
     quadra: "Delta",
     club: "Humanitarians",
-    temperament: "EP · Flexible-maneuvering",
     stack: ["Ne", "Fi", "Te", "Si", "Ni", "Fe", "Ti", "Se"],
     summaries: [
       {
@@ -437,6 +493,28 @@ const GROUP_DESCRIPTIONS: Record<AnalysisView, Record<string, string>> = {
   },
 };
 
+const TEMPERAMENT_NAMES = {
+  EP: "Flexible-maneuvering",
+  EJ: "Linear-assertive",
+  IP: "Receptive-adaptive",
+  IJ: "Balanced-stable",
+} as const;
+
+function getSocionicsAlternative(typeId: TypeId): string {
+  const lastLetter = typeId[3];
+  const socionicsLetter = typeId.startsWith("I")
+    ? lastLetter === "J"
+      ? "p"
+      : "j"
+    : lastLetter.toLowerCase();
+  return `${typeId.slice(0, 3)}${socionicsLetter}`;
+}
+
+function getTemperament(typeId: TypeId): string {
+  const code = `${typeId[0]}${typeId[3]}` as keyof typeof TEMPERAMENT_NAMES;
+  return `${code} · ${TEMPERAMENT_NAMES[code]}`;
+}
+
 export function getTypeProfile(typeId: TypeId): TypeProfile {
   const data = TYPE_DATA[typeId];
   const functions = data.stack.map((element, index) => {
@@ -456,11 +534,11 @@ export function getTypeProfile(typeId: TypeId): TypeProfile {
     id: typeId,
     core: data.core,
     leadingSign: data.leadingSign,
-    frame: data.frame,
+    alternativeName: getSocionicsAlternative(typeId),
     labels: data.labels,
     quadra: data.quadra,
     club: data.club,
-    temperament: data.temperament,
+    temperament: getTemperament(typeId),
     functions,
   };
 }
@@ -495,104 +573,127 @@ export function groupFunctions(
   }));
 }
 
-const ISTP_TO_ENFP: RelationshipChannel[] = [
-  {
-    from: "Ti",
-    fromPosition: "Leading",
-    to: "Te",
-    toPosition: "Activating",
-    layer: "Ego → Subconscious",
-    summary:
-      "Internal analysis can feed a valued wish for useful evidence, organization and execution.",
-  },
-  {
-    from: "Se",
-    fromPosition: "Creative",
-    to: "Si",
-    toPosition: "Anima",
-    layer: "Ego → Subconscious",
-    summary:
-      "Adaptive presence and practical skill can provide grounding, comfort and embodied stability.",
-  },
-  {
-    from: "Te",
-    fromPosition: "Ignoring",
-    to: "Ti",
-    toPosition: "Blindspot",
-    layer: "Shadow → Super-Ego",
-    summary:
-      "Quiet external verification can support an insecure relationship with internal logical certainty.",
-  },
-  {
-    from: "Si",
-    fromPosition: "Background",
-    to: "Se",
-    toPosition: "Demon",
-    layer: "Shadow → Super-Ego",
-    summary:
-      "Unclaimed stability can soften an extreme relationship with effort, force and immediate action.",
-  },
-];
+const RELATION_BY_EGO_TARGETS: Partial<Record<string, RelationshipName>> = {
+  "1-2": "Identity",
+  "4-3": "Dual",
+  "6-5": "Quasi-Identity",
+  "7-8": "Conflict",
+};
 
-const ENFP_TO_ISTP: RelationshipChannel[] = [
-  {
-    from: "Ne",
-    fromPosition: "Leading",
-    to: "Ni",
-    toPosition: "Activating",
-    layer: "Ego → Subconscious",
+const RELATION_META: Record<
+  RelationshipName,
+  Pick<RelationshipAnalysis, "family" | "summary" | "caution">
+> = {
+  Identity: {
+    family: "Symmetric · same type",
     summary:
-      "A field of possibilities can energize the wish to choose a path and move toward a future.",
+      "The same functions occupy the same positions, which supports recognition and shared framing but also leaves the same weak areas uncovered.",
+    caution:
+      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
   },
-  {
-    from: "Fi",
-    fromPosition: "Creative",
-    to: "Fe",
-    toPosition: "Anima",
-    layer: "Ego → Subconscious",
+  Dual: {
+    family: "Symmetric · same-quadra complement",
     summary:
-      "Authentic personal valuation can make emotional connection safer and more meaningful.",
+      "Core competence feeds the other person's valued weak functions, while quiet strengths can support areas of insecurity.",
+    caution:
+      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
   },
-  {
-    from: "Ni",
-    fromPosition: "Ignoring",
-    to: "Ne",
-    toPosition: "Blindspot",
-    layer: "Shadow → Super-Ego",
+  "Quasi-Identity": {
+    family: "Symmetric · opposite-quadra resemblance",
     summary:
-      "Quiet foresight can widen awareness of consequences without demanding constant ideation.",
+      "The same strong functions appear in swapped valued and subdued positions, creating surface similarity with different priorities.",
+    caution:
+      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
   },
-  {
-    from: "Fe",
-    fromPosition: "Background",
-    to: "Fi",
-    toPosition: "Demon",
-    layer: "Shadow → Super-Ego",
+  Conflict: {
+    family: "Symmetric · opposite-quadra tension",
     summary:
-      "Unclaimed social awareness can support personal worth and emotional integration under pressure.",
+      "Each person's leading strengths land directly on the other's conscious weak points, while quieter strengths touch valued needs.",
+    caution:
+      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
   },
-];
+};
+
+function describeRelationshipChannel(
+  relation: RelationshipName,
+  from: FunctionProfile,
+  to: FunctionProfile,
+): string {
+  if (relation === "Identity") {
+    return `${from.element} occupies ${from.name} for both types, making this position easy to recognize in each other.`;
+  }
+  if (relation === "Dual") {
+    return from.aspect === "Ego"
+      ? `${from.element} ${from.name} supports the other's valued ${to.name} need.`
+      : `${from.element} ${from.name} can quietly cover the other's ${to.name} insecurity.`;
+  }
+  if (relation === "Conflict") {
+    return from.aspect === "Ego"
+      ? `${from.element} ${from.name} directly presses on the other's ${to.name} vulnerability.`
+      : `${from.element} ${from.name} touches a valued weak area, but it is not this type's preferred contribution.`;
+  }
+  return from.aspect === "Ego"
+    ? `${from.element} ${from.name} lands in the other's strong but subdued ${to.name} position.`
+    : `${from.element} ${from.name} meets the other's Ego from a strong but subdued position.`;
+}
+
+function buildRelationshipChannels(
+  from: TypeProfile,
+  to: TypeProfile,
+  relation: RelationshipName,
+): RelationshipChannel[] {
+  return from.functions
+    .filter((fn) => fn.aspect === "Ego" || fn.aspect === "Shadow")
+    .map((fromFunction) => {
+      const toFunction = to.functions.find(
+        (candidate) => candidate.element === fromFunction.element,
+      );
+      if (!toFunction) {
+        throw new Error(
+          `Missing ${fromFunction.element} in ${to.id} function stack`,
+        );
+      }
+      return {
+        from: fromFunction.element,
+        fromPosition: fromFunction.name,
+        to: toFunction.element,
+        toPosition: toFunction.name,
+        layer: `${fromFunction.aspect} → ${toFunction.aspect}`,
+        summary: describeRelationshipChannel(
+          relation,
+          fromFunction,
+          toFunction,
+        ),
+      };
+    });
+}
 
 export function getRelationship(
   a: TypeId,
   b: TypeId,
 ): RelationshipAnalysis | null {
-  const isPair =
-    (a === "ISTP" && b === "ENFP") || (a === "ENFP" && b === "ISTP");
-  if (!isPair) return null;
-  const aIsIstp = a === "ISTP";
+  const aProfile = getTypeProfile(a);
+  const bProfile = getTypeProfile(b);
+  const egoTargets = aProfile.functions
+    .slice(0, 2)
+    .map((fromFunction) =>
+      bProfile.functions.find(
+        (candidate) => candidate.element === fromFunction.element,
+      ),
+    );
+  if (egoTargets.some((target) => !target)) return null;
+  const signature = egoTargets.map((target) => target?.id).join("-");
+  const name = RELATION_BY_EGO_TARGETS[signature];
+  if (!name) return null;
+  const meta = RELATION_META[name];
   return {
-    name: "Dual",
-    family: "Symmetric · model-defined complement",
-    summary:
-      "Core competence is modeled as feeding the other person's valued weak functions, while quiet strengths can support areas of insecurity.",
-    caution:
-      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
-    aToB: aIsIstp ? ISTP_TO_ENFP : ENFP_TO_ISTP,
-    bToA: aIsIstp ? ENFP_TO_ISTP : ISTP_TO_ENFP,
+    name,
+    ...meta,
+    aToB: buildRelationshipChannels(aProfile, bProfile, name),
+    bToA: buildRelationshipChannels(bProfile, aProfile, name),
   };
 }
 
 export function getSupportedTypes(): TypeId[] {
-  return ["ISTP", "ENFP"];
+  return [...SUPPORTED_TYPES];
 }

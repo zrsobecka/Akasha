@@ -36,6 +36,21 @@ test("saved observations survive an encode and decode round trip", () => {
   assert.deepEqual(decoded, [observation]);
 });
 
+test("ISTJ observations are accepted by local storage validation", () => {
+  const istjObservation = {
+    ...observation,
+    id: "observation-istj",
+    target: {
+      ...observation.target,
+      typeId: "ISTJ",
+      element: "Si",
+    },
+  };
+  assert.deepEqual(decodeObservations(encodeObservations([istjObservation])), [
+    istjObservation,
+  ]);
+});
+
 test("invalid or unsupported observation storage fails safely", () => {
   assert.deepEqual(decodeObservations("not-json"), []);
   assert.deepEqual(

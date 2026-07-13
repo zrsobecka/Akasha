@@ -18,4 +18,5 @@ Akasha is a private, local-first Tauri desktop app for learning socionics throug
 ## Windows builds
 
 - Dropbox may lock Vite and Rust build artifacts. For release builds, set `CARGO_TARGET_DIR` outside Dropbox as documented in `app/README.md`.
+- After changing Tauri icons, build with a fresh `CARGO_TARGET_DIR`; reusing the previous target can leave the old Windows icon embedded in the `.exe`.
 - Preserve the repository LF policy from `.gitattributes`.
