@@ -7,7 +7,7 @@ import {
   UsersRound,
   X,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RelationshipView from "./RelationshipView";
 import RealLifeView from "./RealLifeView";
 import TypeAnalysisView from "./TypeAnalysisView";
@@ -26,6 +26,7 @@ import {
   saveSelectedPersonId,
   type PersonRecord,
 } from "./personStorage";
+import { resolveComparisonPersonId } from "./relationshipSelection";
 import {
   getSupportedTypes,
   getTypeProfile,
@@ -241,6 +242,9 @@ export default function SocionicsWorkspace() {
   const [activeTab, setActiveTab] = useState<ProfileTab>("analysis");
   const [openedRealLife, setOpenedRealLife] = useState(false);
   const [showAddPerson, setShowAddPerson] = useState(false);
+  const [comparisonPersonId, setComparisonPersonId] = useState<string | null>(
+    null,
+  );
   const [observations, setObservations] =
     useState<ObservationRecord[]>(loadObservations);
   const [evidenceTarget, setEvidenceTarget] = useState<FunctionProfile | null>(
@@ -271,10 +275,9 @@ export default function SocionicsWorkspace() {
 
   const selected =
     people.find((person) => person.id === selectedId) ?? people[0] ?? null;
-  const other = useMemo(
-    () => people.find((person) => person.id !== selected?.id) ?? null,
-    [people, selected],
-  );
+  const resolvedComparisonPersonId = selected
+    ? resolveComparisonPersonId(people, selected.id, comparisonPersonId)
+    : null;
   const visiblePeople = people.filter((person) =>
     person.name.toLowerCase().includes(query.toLowerCase()),
   );
@@ -455,7 +458,12 @@ export default function SocionicsWorkspace() {
             />
           )}
           {activeTab === "relationships" && (
-            <RelationshipView person={selected} other={other} />
+            <RelationshipView
+              person={selected}
+              people={people}
+              comparisonPersonId={resolvedComparisonPersonId}
+              onComparisonPersonChange={setComparisonPersonId}
+            />
           )}
           {activeTab === "groups" && <GroupsPanel person={selected} />}
         </div>

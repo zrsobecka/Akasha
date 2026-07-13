@@ -68,75 +68,124 @@ function DirectionPanel({
 
 export default function RelationshipView({
   person,
-  other,
+  people,
+  comparisonPersonId,
+  onComparisonPersonChange,
 }: {
   person: PersonRecord;
-  other: PersonRecord | null;
+  people: PersonRecord[];
+  comparisonPersonId: string | null;
+  onComparisonPersonChange: (personId: string) => void;
 }) {
+  const availablePeople = people.filter(
+    (candidate) => candidate.id !== person.id,
+  );
+  const other =
+    availablePeople.find((candidate) => candidate.id === comparisonPersonId) ??
+    null;
+
   if (!other) {
     return (
-      <section className="empty-panel">
-        <GitCompareArrows size={24} />
-        <h2>Add another person to compare</h2>
-        <p>Relationships need two working type hypotheses.</p>
-      </section>
+      <div className="relationship-view">
+        <section className="empty-panel">
+          <GitCompareArrows size={24} />
+          <h2>Add another person to compare</h2>
+          <p>Relationships need two working type hypotheses.</p>
+        </section>
+      </div>
     );
   }
 
   const relationship = getRelationship(person.typeId, other.typeId);
-  if (!relationship) {
-    return (
-      <section className="empty-panel">
-        <TriangleAlert size={24} />
-        <h2>This pair is not mapped in the prototype yet</h2>
-        <p>
-          The current slice derives symmetric relations from supported stacks.
-        </p>
-      </section>
-    );
-  }
-
   const a = getTypeProfile(person.typeId);
   const b = getTypeProfile(other.typeId);
 
   return (
     <div className="relationship-view">
-      <section className="relationship-hero">
-        <div>
-          <span className="eyebrow">
-            <GitCompareArrows size={13} /> Intertype relationship
-          </span>
-          <h1>
-            {person.name} <span>×</span> {other.name}
-          </h1>
-          <p>
-            {a.core} and {b.core} · viewed from both directions
-          </p>
-        </div>
-        <div className="relation-badge">
-          <Sparkles size={16} />
+      <section
+        className="relationship-picker"
+        aria-label="Choose people to compare"
+      >
+        <div className="person-mini">
+          <span>{person.name.slice(0, 1).toUpperCase()}</span>
           <div>
-            <strong>{relationship.name}</strong>
-            <small>{relationship.family}</small>
+            <small>Current person</small>
+            <strong>{person.name}</strong>
           </div>
         </div>
+        <GitCompareArrows size={18} aria-hidden="true" />
+        <label>
+          <span>Compare with</span>
+          <select
+            value={other.id}
+            onChange={(event) => onComparisonPersonChange(event.target.value)}
+          >
+            {availablePeople.map((candidate) => (
+              <option key={candidate.id} value={candidate.id}>
+                {candidate.name} · {candidate.typeId}
+              </option>
+            ))}
+          </select>
+        </label>
       </section>
 
-      <section className="relation-explanation">
-        <div>
-          <ShieldCheck size={18} />
-          <p>{relationship.summary}</p>
-        </div>
-        <div className="model-caution">
-          <TriangleAlert size={15} />
-          <p>{relationship.caution}</p>
-        </div>
-      </section>
+      {!relationship ? (
+        <section className="empty-panel relationship-unmapped">
+          <TriangleAlert size={24} />
+          <h2>This pair is not mapped in the prototype yet</h2>
+          <p>
+            Try another person. The current slice derives four symmetric
+            relations from supported stacks.
+          </p>
+        </section>
+      ) : (
+        <>
+          <section className="relationship-hero">
+            <div>
+              <span className="eyebrow">
+                <GitCompareArrows size={13} /> Intertype relationship
+              </span>
+              <h1>
+                {person.name} <span>×</span> {other.name}
+              </h1>
+              <p>
+                {a.core} and {b.core} · viewed from both directions
+              </p>
+            </div>
+            <div className="relation-badge">
+              <Sparkles size={16} />
+              <div>
+                <strong>{relationship.name}</strong>
+                <small>{relationship.family}</small>
+              </div>
+            </div>
+          </section>
 
-      <div className="relationship-directions">
-        <DirectionPanel from={person} to={other} channels={relationship.aToB} />
-        <DirectionPanel from={other} to={person} channels={relationship.bToA} />
-      </div>
+          <section className="relation-explanation">
+            <div>
+              <ShieldCheck size={18} />
+              <p>{relationship.summary}</p>
+            </div>
+            <div className="model-caution">
+              <TriangleAlert size={15} />
+              <p>{relationship.caution}</p>
+            </div>
+          </section>
+
+          <div className="relationship-directions">
+            <DirectionPanel
+              from={person}
+              to={other}
+              channels={relationship.aToB}
+            />
+            <DirectionPanel
+              from={other}
+              to={person}
+              channels={relationship.bToA}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
