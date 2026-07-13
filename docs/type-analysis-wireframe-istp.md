@@ -31,16 +31,16 @@ Według `Types/ISTP.md`:
 
 Stos funkcji:
 
-| Pozycja | Funkcja | Aspect |
-|---|---|---|
-| Leading | Ti | Ego |
-| Creative | Se | Ego |
-| Activating | Ni | Subconscious |
-| Anima | Fe | Subconscious |
-| Ignoring | Te | Shadow |
-| Background | Si | Shadow |
-| Blindspot | Ne | Super-Ego |
-| Demon | Fi | Super-Ego |
+| Pozycja    | Funkcja | Aspect       |
+| ---------- | ------- | ------------ |
+| Leading    | Ti      | Ego          |
+| Creative   | Se      | Ego          |
+| Activating | Ni      | Subconscious |
+| Anima      | Fe      | Subconscious |
+| Ignoring   | Te      | Shadow       |
+| Background | Si      | Shadow       |
+| Blindspot  | Ne      | Super-Ego    |
+| Demon      | Fi      | Super-Ego    |
 
 W UI wszystkie wynikowe treści muszą być poprzedzone znaczeniem:
 
@@ -139,29 +139,29 @@ Filtr dowodów nie zmienia modelu. Podświetla jedynie miejsca, które mają odp
 
 Poniższa tabela jest głównym fixture'em domenowym dla wireframe'u. Wszystkie widoki mają przedstawiać te same dane bez ich duplikowania.
 
-| Funkcja | Position | Aspect | Dimension | Reflection | Axis | Orbit | Sphere | Mode |
-|---|---|---|---|---|---|---|---|---|
-| Ti | Leading | Ego | 4D Generalization | Lens | Drive | Worldview | Identity | Stance |
-| Se | Creative | Ego | 3D Adaptation | Expression | Method | Impact | Exchange | Navigation |
-| Ni | Activating | Subconscious | 2D Norms | Projection | Method | Template | Identity | Regulation |
-| Fe | Anima | Subconscious | 1D Experience | Resonance | Drive | Impression | Exchange | Sync |
-| Te | Ignoring | Shadow | 3D Adaptation | Resonance | Friction | Worldview | Avoidance | Regulation |
-| Si | Background | Shadow | 4D Generalization | Projection | Drift | Impact | Filter | Sync |
-| Ne | Blindspot | Super-Ego | 1D Experience | Expression | Drift | Template | Avoidance | Stance |
-| Fi | Demon | Super-Ego | 2D Norms | Lens | Friction | Impression | Filter | Navigation |
+| Funkcja | Position   | Aspect       | Dimension         | Reflection | Axis     | Orbit      | Sphere    | Mode       |
+| ------- | ---------- | ------------ | ----------------- | ---------- | -------- | ---------- | --------- | ---------- |
+| Ti      | Leading    | Ego          | 4D Generalization | Lens       | Drive    | Worldview  | Identity  | Stance     |
+| Se      | Creative   | Ego          | 3D Adaptation     | Expression | Method   | Impact     | Exchange  | Navigation |
+| Ni      | Activating | Subconscious | 2D Norms          | Projection | Method   | Template   | Identity  | Regulation |
+| Fe      | Anima      | Subconscious | 1D Experience     | Resonance  | Drive    | Impression | Exchange  | Sync       |
+| Te      | Ignoring   | Shadow       | 3D Adaptation     | Resonance  | Friction | Worldview  | Avoidance | Regulation |
+| Si      | Background | Shadow       | 4D Generalization | Projection | Drift    | Impact     | Filter    | Sync       |
+| Ne      | Blindspot  | Super-Ego    | 1D Experience     | Expression | Drift    | Template   | Avoidance | Stance     |
+| Fi      | Demon      | Super-Ego    | 2D Norms          | Lens       | Friction | Impression | Filter    | Navigation |
 
 ## 7. Pełne profile ring każdej funkcji
 
-| Funkcja i pozycja | Awareness | Capacity | Receptivity | Preference | Rigidity | Scope | Boldness |
-|---|---|---|---|---|---|---|---|
-| Ti Leading | Conscious | Strong | Accepting | Valued | Rigid | Universal | Bold |
-| Se Creative | Conscious | Strong | Producing | Valued | Flexible | Situational | Cautious |
-| Ni Activating | Unconscious | Weak | Producing | Valued | Rigid | Universal | Cautious |
-| Fe Anima | Unconscious | Weak | Accepting | Valued | Flexible | Situational | Bold |
-| Te Ignoring | Unconscious | Strong | Accepting | Subdued | Rigid | Situational | Cautious |
-| Si Background | Unconscious | Strong | Producing | Subdued | Flexible | Universal | Bold |
-| Ne Blindspot | Conscious | Weak | Producing | Subdued | Rigid | Situational | Bold |
-| Fi Demon | Conscious | Weak | Accepting | Subdued | Flexible | Universal | Cautious |
+| Funkcja i pozycja | Awareness   | Capacity | Receptivity | Preference | Rigidity | Scope       | Boldness |
+| ----------------- | ----------- | -------- | ----------- | ---------- | -------- | ----------- | -------- |
+| Ti Leading        | Conscious   | Strong   | Accepting   | Valued     | Rigid    | Universal   | Bold     |
+| Se Creative       | Conscious   | Strong   | Producing   | Valued     | Flexible | Situational | Cautious |
+| Ni Activating     | Unconscious | Weak     | Producing   | Valued     | Rigid    | Universal   | Cautious |
+| Fe Anima          | Unconscious | Weak     | Accepting   | Valued     | Flexible | Situational | Bold     |
+| Te Ignoring       | Unconscious | Strong   | Accepting   | Subdued    | Rigid    | Situational | Cautious |
+| Si Background     | Unconscious | Strong   | Producing   | Subdued    | Flexible | Universal   | Bold     |
+| Ne Blindspot      | Conscious   | Weak     | Producing   | Subdued    | Rigid    | Situational | Bold     |
+| Fi Demon          | Conscious   | Weak     | Accepting   | Subdued    | Flexible | Universal   | Cautious |
 
 W UI traits są krótkimi, klikalnymi tokenami. Kliknięcie `Rigid` pokazuje definicję cechy oraz jej rolę w aktualnym wniosku.
 
@@ -347,12 +347,12 @@ Add a situation involving:
 
 Funkcje są grupowane według jakości przetwarzania:
 
-| Dimension | Funkcje ISTP | Skrót znaczenia |
-|---|---|---|
-| 4D Generalization | Ti Leading + Si Background | globalne i autonomiczne rozumienie |
-| 3D Adaptation | Se Creative + Te Ignoring | elastyczne dopasowanie do sytuacji |
-| 2D Norms | Ni Activating + Fi Demon | korzystanie z zewnętrznych norm i wzorców |
-| 1D Experience | Fe Anima + Ne Blindspot | uczenie głównie przez osobiste doświadczenie |
+| Dimension         | Funkcje ISTP               | Skrót znaczenia                              |
+| ----------------- | -------------------------- | -------------------------------------------- |
+| 4D Generalization | Ti Leading + Si Background | globalne i autonomiczne rozumienie           |
+| 3D Adaptation     | Se Creative + Te Ignoring  | elastyczne dopasowanie do sytuacji           |
+| 2D Norms          | Ni Activating + Fi Demon   | korzystanie z zewnętrznych norm i wzorców    |
+| 1D Experience     | Fe Anima + Ne Blindspot    | uczenie głównie przez osobiste doświadczenie |
 
 Kliknięcie dimension pokazuje wspólną cechę oraz różnicę między funkcją cenioną i subdued, świadomą i nieświadomą.
 

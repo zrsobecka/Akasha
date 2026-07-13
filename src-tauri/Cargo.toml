@@ -1,7 +1,7 @@
 [package]
 name = "akasha"
 version = "0.1.0"
-description = "A calm, local-first daily dashboard"
+description = "A calm, local-first socionics learning lab"
 authors = ["Zuza"]
 edition = "2021"
 

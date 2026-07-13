@@ -13,6 +13,7 @@ dist-ssr
 build
 coverage
 src-tauri/target
+app/*.exe
 *.local
 
 # Environment variables and secrets

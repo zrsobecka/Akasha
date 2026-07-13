@@ -1,23 +1,36 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getRelationship, getTypeProfile, groupFunctions } from "../src/features/socionics/socionicsModel.ts";
+import {
+  getRelationship,
+  getTypeProfile,
+  groupFunctions,
+} from "../src/features/socionics/socionicsModel.ts";
 
 test("ISTP derives the expected eight-function stack", () => {
   const profile = getTypeProfile("ISTP");
-  assert.deepEqual(profile.functions.map((fn) => fn.element), ["Ti", "Se", "Ni", "Fe", "Te", "Si", "Ne", "Fi"]);
+  assert.deepEqual(
+    profile.functions.map((fn) => fn.element),
+    ["Ti", "Se", "Ni", "Fe", "Te", "Si", "Ne", "Fi"],
+  );
   assert.equal(new Set(profile.functions.map((fn) => fn.element)).size, 8);
 });
 
 test("ENFP derives the expected eight-function stack", () => {
   const profile = getTypeProfile("ENFP");
-  assert.deepEqual(profile.functions.map((fn) => fn.element), ["Ne", "Fi", "Te", "Si", "Ni", "Fe", "Ti", "Se"]);
+  assert.deepEqual(
+    profile.functions.map((fn) => fn.element),
+    ["Ne", "Fi", "Te", "Si", "Ni", "Fe", "Ti", "Se"],
+  );
   assert.equal(new Set(profile.functions.map((fn) => fn.element)).size, 8);
 });
 
 test("ISTP Super-Ego contains Ne Blindspot and Fi Demon", () => {
   const groups = groupFunctions(getTypeProfile("ISTP"), "aspects");
   const superEgo = groups.find((group) => group.label === "Super-Ego");
-  assert.deepEqual(superEgo?.functions.map((fn) => `${fn.element} ${fn.name}`), ["Ne Blindspot", "Fi Demon"]);
+  assert.deepEqual(
+    superEgo?.functions.map((fn) => `${fn.element} ${fn.name}`),
+    ["Ne Blindspot", "Fi Demon"],
+  );
 });
 
 test("dimensions preserve all functions without duplication", () => {

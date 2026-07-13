@@ -19,11 +19,15 @@ const SELECTED_KEY = "akasha.socionics.selected-person.v1";
 function isPersonRecord(value: unknown): value is PersonRecord {
   if (!value || typeof value !== "object") return false;
   const person = value as Partial<PersonRecord>;
-  return typeof person.id === "string"
-    && typeof person.name === "string"
-    && (person.typeId === "ISTP" || person.typeId === "ENFP")
-    && typeof person.relationship === "string"
-    && (person.confidence === "Exploring" || person.confidence === "Working" || person.confidence === "Strong");
+  return (
+    typeof person.id === "string" &&
+    typeof person.name === "string" &&
+    (person.typeId === "ISTP" || person.typeId === "ENFP") &&
+    typeof person.relationship === "string" &&
+    (person.confidence === "Exploring" ||
+      person.confidence === "Working" ||
+      person.confidence === "Strong")
+  );
 }
 
 export function loadPeople(): PersonRecord[] {
@@ -43,8 +47,18 @@ export function savePeople(people: PersonRecord[]): void {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
 }
 
-export function createPerson(name: string, typeId: TypeId, relationship: string): PersonRecord {
-  return { id: crypto.randomUUID(), name: name.trim(), typeId, relationship: relationship.trim(), confidence: "Working" };
+export function createPerson(
+  name: string,
+  typeId: TypeId,
+  relationship: string,
+): PersonRecord {
+  return {
+    id: crypto.randomUUID(),
+    name: name.trim(),
+    typeId,
+    relationship: relationship.trim(),
+    confidence: "Working",
+  };
 }
 
 export function loadSelectedPersonId(): string | null {
