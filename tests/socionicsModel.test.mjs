@@ -112,18 +112,67 @@ test("same-type comparison derives Identity", () => {
   assert.equal(getRelationship("ISTP", "ISTP")?.name, "Identity");
 });
 
-test("all currently supported type pairs derive a symmetric relation", () => {
-  const expected = new Map([
-    ["ISTP:ISTJ", "Quasi-Identity"],
-    ["ISTP:ENFP", "Conflict"],
-    ["ISTJ:ENFP", "Dual"],
-  ]);
-  for (const [pair, name] of expected) {
-    const [a, b] = pair.split(":");
-    const forward = getRelationship(a, b);
-    const reverse = getRelationship(b, a);
-    assert.equal(forward?.name, name);
-    assert.equal(reverse?.name, name);
-    assert.deepEqual(forward?.aToB, reverse?.bToA);
+test("ENTP resolves the complete classical intertype relation row", () => {
+  const expected = [
+    ["ENTP", "Identity"],
+    ["ISFJ", "Dual"],
+    ["ESFJ", "Activity"],
+    ["INTP", "Mirror"],
+    ["ENFJ", "Benefit", "Benefactor"],
+    ["ISTP", "Supervision", "Supervisor"],
+    ["ESTP", "Business"],
+    ["INFJ", "Mirage"],
+    ["ESFP", "Super-Ego"],
+    ["INTJ", "Extinguishment"],
+    ["ENTJ", "Quasi-Identity"],
+    ["ISFP", "Conflict"],
+    ["ESTJ", "Benefit", "Beneficiary"],
+    ["INFP", "Supervision", "Supervisee"],
+    ["ENFP", "Kindred"],
+    ["ISTJ", "Semi-Dual"],
+  ];
+
+  for (const [other, name, role] of expected) {
+    const relationship = getRelationship("ENTP", other);
+    assert.equal(relationship.name, name, `ENTP:${other}`);
+    assert.equal(relationship.aRole, role, `ENTP:${other} role`);
   }
+});
+
+test("all 256 ordered type pairs derive a reversible relationship", () => {
+  const types = getSupportedTypes();
+  const relationNames = new Set();
+
+  for (const a of types) {
+    for (const b of types) {
+      const forward = getRelationship(a, b);
+      const reverse = getRelationship(b, a);
+      relationNames.add(forward.name);
+
+      assert.equal(forward.name, reverse.name, `${a}:${b} name`);
+      assert.deepEqual(forward.aToB, reverse.bToA, `${a}:${b} A→B`);
+      assert.deepEqual(forward.bToA, reverse.aToB, `${a}:${b} B→A`);
+      assert.equal(forward.aRole, reverse.bRole, `${a}:${b} A role`);
+      assert.equal(forward.bRole, reverse.aRole, `${a}:${b} B role`);
+      assert.equal(forward.aToB.length, 4, `${a}:${b} A→B channels`);
+      assert.equal(forward.bToA.length, 4, `${a}:${b} B→A channels`);
+    }
+  }
+
+  assert.deepEqual([...relationNames].sort(), [
+    "Activity",
+    "Benefit",
+    "Business",
+    "Conflict",
+    "Dual",
+    "Extinguishment",
+    "Identity",
+    "Kindred",
+    "Mirage",
+    "Mirror",
+    "Quasi-Identity",
+    "Semi-Dual",
+    "Super-Ego",
+    "Supervision",
+  ]);
 });

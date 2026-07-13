@@ -1051,9 +1051,6 @@ summary:focus-visible {
   outline: 2px solid rgba(83, 246, 196, 0.55);
   outline-offset: 2px;
 }
-.relationship-unmapped {
-  min-height: 420px;
-}
 .relation-badge {
   display: flex;
   align-items: center;
@@ -1079,6 +1076,11 @@ summary:focus-visible {
     "Consolas",
     monospace;
   text-transform: uppercase;
+}
+.relation-badge .relation-roles {
+  margin-top: 4px;
+  color: var(--text-soft);
+  text-transform: none;
 }
 .relation-explanation {
   display: grid;

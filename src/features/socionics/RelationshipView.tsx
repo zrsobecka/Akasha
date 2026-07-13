@@ -129,63 +129,48 @@ export default function RelationshipView({
         </label>
       </section>
 
-      {!relationship ? (
-        <section className="empty-panel relationship-unmapped">
-          <TriangleAlert size={24} />
-          <h2>This pair is not mapped in the prototype yet</h2>
+      <section className="relationship-hero">
+        <div>
+          <span className="eyebrow">
+            <GitCompareArrows size={13} /> Intertype relationship
+          </span>
+          <h1>
+            {person.name} <span>×</span> {other.name}
+          </h1>
           <p>
-            Try another person. The current slice derives four symmetric
-            relations from supported stacks.
+            {a.core} and {b.core} · viewed from both directions
           </p>
-        </section>
-      ) : (
-        <>
-          <section className="relationship-hero">
-            <div>
-              <span className="eyebrow">
-                <GitCompareArrows size={13} /> Intertype relationship
-              </span>
-              <h1>
-                {person.name} <span>×</span> {other.name}
-              </h1>
-              <p>
-                {a.core} and {b.core} · viewed from both directions
-              </p>
-            </div>
-            <div className="relation-badge">
-              <Sparkles size={16} />
-              <div>
-                <strong>{relationship.name}</strong>
-                <small>{relationship.family}</small>
-              </div>
-            </div>
-          </section>
-
-          <section className="relation-explanation">
-            <div>
-              <ShieldCheck size={18} />
-              <p>{relationship.summary}</p>
-            </div>
-            <div className="model-caution">
-              <TriangleAlert size={15} />
-              <p>{relationship.caution}</p>
-            </div>
-          </section>
-
-          <div className="relationship-directions">
-            <DirectionPanel
-              from={person}
-              to={other}
-              channels={relationship.aToB}
-            />
-            <DirectionPanel
-              from={other}
-              to={person}
-              channels={relationship.bToA}
-            />
+        </div>
+        <div className="relation-badge">
+          <Sparkles size={16} />
+          <div>
+            <strong>{relationship.name}</strong>
+            <small>{relationship.family}</small>
+            {relationship.aRole && relationship.bRole && (
+              <small className="relation-roles">
+                {person.name}: {relationship.aRole} · {other.name}:{" "}
+                {relationship.bRole}
+              </small>
+            )}
           </div>
-        </>
-      )}
+        </div>
+      </section>
+
+      <section className="relation-explanation">
+        <div>
+          <ShieldCheck size={18} />
+          <p>{relationship.summary}</p>
+        </div>
+        <div className="model-caution">
+          <TriangleAlert size={15} />
+          <p>{relationship.caution}</p>
+        </div>
+      </section>
+
+      <div className="relationship-directions">
+        <DirectionPanel from={person} to={other} channels={relationship.aToB} />
+        <DirectionPanel from={other} to={person} channels={relationship.bToA} />
+      </div>
     </div>
   );
 }

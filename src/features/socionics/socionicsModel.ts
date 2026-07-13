@@ -74,13 +74,31 @@ export interface RelationshipChannel {
 }
 
 export type RelationshipName =
-  "Identity" | "Dual" | "Quasi-Identity" | "Conflict";
+  | "Identity"
+  | "Dual"
+  | "Activity"
+  | "Mirror"
+  | "Kindred"
+  | "Semi-Dual"
+  | "Business"
+  | "Mirage"
+  | "Super-Ego"
+  | "Extinguishment"
+  | "Quasi-Identity"
+  | "Conflict"
+  | "Benefit"
+  | "Supervision";
+
+export type RelationshipRole =
+  "Benefactor" | "Beneficiary" | "Supervisor" | "Supervisee";
 
 export interface RelationshipAnalysis {
   name: RelationshipName;
   family: string;
   summary: string;
   caution: string;
+  aRole?: RelationshipRole;
+  bRole?: RelationshipRole;
   aToB: RelationshipChannel[];
   bToA: RelationshipChannel[];
 }
@@ -743,12 +761,49 @@ export function groupFunctions(
   }));
 }
 
-const RELATION_BY_EGO_TARGETS: Partial<Record<string, RelationshipName>> = {
-  "1-2": "Identity",
-  "4-3": "Dual",
-  "6-5": "Quasi-Identity",
-  "7-8": "Conflict",
+interface RelationshipPattern {
+  name: RelationshipName;
+  aRole?: RelationshipRole;
+  bRole?: RelationshipRole;
+}
+
+const RELATION_BY_EGO_TARGETS: Record<string, RelationshipPattern> = {
+  "1-2": { name: "Identity" },
+  "2-1": { name: "Mirror" },
+  "3-4": { name: "Activity" },
+  "4-3": { name: "Dual" },
+  "1-7": { name: "Kindred" },
+  "8-2": { name: "Business" },
+  "4-6": { name: "Semi-Dual" },
+  "5-3": { name: "Mirage" },
+  "5-6": { name: "Extinguishment" },
+  "8-7": { name: "Super-Ego" },
+  "6-5": { name: "Quasi-Identity" },
+  "7-8": { name: "Conflict" },
+  "6-4": {
+    name: "Benefit",
+    aRole: "Benefactor",
+    bRole: "Beneficiary",
+  },
+  "3-5": {
+    name: "Benefit",
+    aRole: "Beneficiary",
+    bRole: "Benefactor",
+  },
+  "7-1": {
+    name: "Supervision",
+    aRole: "Supervisor",
+    bRole: "Supervisee",
+  },
+  "2-8": {
+    name: "Supervision",
+    aRole: "Supervisee",
+    bRole: "Supervisor",
+  },
 };
+
+const RELATION_CAUTION =
+  "This is a structural prediction from two working type hypotheses, not a verdict about the real relationship.";
 
 const RELATION_META: Record<
   RelationshipName,
@@ -758,59 +813,122 @@ const RELATION_META: Record<
     family: "Symmetric · same type",
     summary:
       "The same functions occupy the same positions, which supports recognition and shared framing but also leaves the same weak areas uncovered.",
-    caution:
-      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
+    caution: RELATION_CAUTION,
   },
   Dual: {
     family: "Symmetric · same-quadra complement",
     summary:
       "Core competence feeds the other person's valued weak functions, while quiet strengths can support areas of insecurity.",
-    caution:
-      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
+    caution: RELATION_CAUTION,
+  },
+  Activity: {
+    family: "Symmetric · same-quadra activation",
+    summary:
+      "Both types support valued functions and readily energize one another, though sustained intensity can become tiring without space to reset.",
+    caution: RELATION_CAUTION,
+  },
+  Mirror: {
+    family: "Symmetric · same-quadra reflection",
+    summary:
+      "The same valued strengths are arranged in leading and supporting positions, encouraging recognition, discussion and mutual correction.",
+    caution: RELATION_CAUTION,
+  },
+  Kindred: {
+    family: "Symmetric · shared leading function",
+    summary:
+      "A shared leading function creates a familiar lens, while different creative priorities can produce sharply different ways of applying it.",
+    caution: RELATION_CAUTION,
+  },
+  "Semi-Dual": {
+    family: "Symmetric · partial complement",
+    summary:
+      "Part of the expected support arrives naturally, while another valued need is met indirectly, creating alternating connection and mismatch.",
+    caution: RELATION_CAUTION,
+  },
+  Business: {
+    family: "Symmetric · cooperation",
+    summary:
+      "The pair shares one flexible strength and can coordinate practical activity, but their leading priorities point in different directions.",
+    caution: RELATION_CAUTION,
+  },
+  Mirage: {
+    family: "Symmetric · relaxed complement",
+    summary:
+      "Support tends to land gently on valued needs, making contact comfortable, while sustained joint execution may lack a shared direction.",
+    caution: RELATION_CAUTION,
+  },
+  "Super-Ego": {
+    family: "Symmetric · cross-quadra pressure",
+    summary:
+      "Each person's confident strengths overlap with the other's effortful areas, which can create admiration at a distance and pressure up close.",
+    caution: RELATION_CAUTION,
+  },
+  Extinguishment: {
+    family: "Symmetric · opposing orientation",
+    summary:
+      "The pair recognizes similar capacities but values and expresses them in opposite orientations, so one person's initiative may dampen the other's.",
+    caution: RELATION_CAUTION,
   },
   "Quasi-Identity": {
     family: "Symmetric · opposite-quadra resemblance",
     summary:
       "The same strong functions appear in swapped valued and subdued positions, creating surface similarity with different priorities.",
-    caution:
-      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
+    caution: RELATION_CAUTION,
   },
   Conflict: {
     family: "Symmetric · opposite-quadra tension",
     summary:
       "Each person's leading strengths land directly on the other's conscious weak points, while quieter strengths touch valued needs.",
-    caution:
-      "This is a structural prediction from the working type hypotheses, not a verdict about the real relationship.",
+    caution: RELATION_CAUTION,
+  },
+  Benefit: {
+    family: "Asymmetric · benefit flow",
+    summary:
+      "The benefactor naturally supplies information the beneficiary values, but the return flow follows a different route and can feel uneven to both people.",
+    caution: RELATION_CAUTION,
+  },
+  Supervision: {
+    family: "Asymmetric · supervision flow",
+    summary:
+      "The supervisor's natural strength reaches the supervisee's most effortful area, creating an uneven pattern of scrutiny, correction and sensitivity.",
+    caution: RELATION_CAUTION,
   },
 };
 
 function describeRelationshipChannel(
-  relation: RelationshipName,
   from: FunctionProfile,
   to: FunctionProfile,
 ): string {
-  if (relation === "Identity") {
+  if (from.id === to.id) {
     return `${from.element} occupies ${from.name} for both types, making this position easy to recognize in each other.`;
   }
-  if (relation === "Dual") {
+
+  if (to.aspect === "Subconscious") {
     return from.aspect === "Ego"
-      ? `${from.element} ${from.name} supports the other's valued ${to.name} need.`
-      : `${from.element} ${from.name} can quietly cover the other's ${to.name} insecurity.`;
+      ? `${from.element} ${from.name} directly supports the other's valued ${to.name} need.`
+      : `${from.element} ${from.name} can quietly support the other's valued ${to.name} need.`;
   }
-  if (relation === "Conflict") {
+
+  if (to.aspect === "Super-Ego") {
     return from.aspect === "Ego"
-      ? `${from.element} ${from.name} directly presses on the other's ${to.name} vulnerability.`
-      : `${from.element} ${from.name} touches a valued weak area, but it is not this type's preferred contribution.`;
+      ? `${from.element} ${from.name} reaches the other's effortful ${to.name} position and may feel helpful or pressuring.`
+      : `${from.element} ${from.name} touches the other's effortful ${to.name} position, but may be offered too indirectly.`;
   }
+
+  if (to.aspect === "Shadow") {
+    return from.aspect === "Ego"
+      ? `${from.element} ${from.name} meets the other's strong but subdued ${to.name} position.`
+      : `${from.element} is strong for both types, but each keeps it in a different background position.`;
+  }
+
   return from.aspect === "Ego"
-    ? `${from.element} ${from.name} lands in the other's strong but subdued ${to.name} position.`
-    : `${from.element} ${from.name} meets the other's Ego from a strong but subdued position.`;
+    ? `${from.element} is an Ego strength for both types, expressed through different positions.`
+    : `${from.element} ${from.name} quietly supports the other's valued ${to.name} strength.`;
 }
 
 function buildRelationshipChannels(
   from: TypeProfile,
   to: TypeProfile,
-  relation: RelationshipName,
 ): RelationshipChannel[] {
   return from.functions
     .filter((fn) => fn.aspect === "Ego" || fn.aspect === "Shadow")
@@ -829,19 +947,12 @@ function buildRelationshipChannels(
         to: toFunction.element,
         toPosition: toFunction.name,
         layer: `${fromFunction.aspect} → ${toFunction.aspect}`,
-        summary: describeRelationshipChannel(
-          relation,
-          fromFunction,
-          toFunction,
-        ),
+        summary: describeRelationshipChannel(fromFunction, toFunction),
       };
     });
 }
 
-export function getRelationship(
-  a: TypeId,
-  b: TypeId,
-): RelationshipAnalysis | null {
+export function getRelationship(a: TypeId, b: TypeId): RelationshipAnalysis {
   const aProfile = getTypeProfile(a);
   const bProfile = getTypeProfile(b);
   const egoTargets = aProfile.functions
@@ -851,16 +962,22 @@ export function getRelationship(
         (candidate) => candidate.element === fromFunction.element,
       ),
     );
-  if (egoTargets.some((target) => !target)) return null;
+  if (egoTargets.some((target) => !target)) {
+    throw new Error(`Incomplete relationship signature for ${a} and ${b}`);
+  }
   const signature = egoTargets.map((target) => target?.id).join("-");
-  const name = RELATION_BY_EGO_TARGETS[signature];
-  if (!name) return null;
-  const meta = RELATION_META[name];
+  const pattern = RELATION_BY_EGO_TARGETS[signature];
+  if (!pattern) {
+    throw new Error(`Unknown relationship signature ${signature}`);
+  }
+  const meta = RELATION_META[pattern.name];
   return {
-    name,
+    name: pattern.name,
     ...meta,
-    aToB: buildRelationshipChannels(aProfile, bProfile, name),
-    bToA: buildRelationshipChannels(bProfile, aProfile, name),
+    aRole: pattern.aRole,
+    bRole: pattern.bRole,
+    aToB: buildRelationshipChannels(aProfile, bProfile),
+    bToA: buildRelationshipChannels(bProfile, aProfile),
   };
 }
 
