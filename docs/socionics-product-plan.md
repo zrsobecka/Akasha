@@ -38,7 +38,7 @@ Ti + Leading
 | Obszar                                                  | Stan                          |
 | ------------------------------------------------------- | ----------------------------- |
 | Shell list-detail i profile osób                        | działa                        |
-| Robocze typy ISTP i ENFP                                | działa                        |
+| Robocze typy ISTP, ISTJ i ENFP                          | działa                        |
 | Osiem funkcji                                           | działa                        |
 | Position grid, Aspects, Dimensions                      | działa                        |
 | Overview i deep dive                                    | działa                        |

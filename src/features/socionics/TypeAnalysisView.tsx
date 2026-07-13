@@ -232,7 +232,7 @@ export default function TypeAnalysisView({
           <div>
             <strong>{profile.leadingSign}</strong>
             <small>
-              {profile.frame} · {profile.labels}
+              Alternative: {profile.alternativeName} · {profile.labels}
             </small>
           </div>
         </div>

@@ -36,6 +36,21 @@ test("saved observations survive an encode and decode round trip", () => {
   assert.deepEqual(decoded, [observation]);
 });
 
+test("newly supported type observations pass local storage validation", () => {
+  const entjObservation = {
+    ...observation,
+    id: "observation-entj",
+    target: {
+      ...observation.target,
+      typeId: "ENTJ",
+      element: "Te",
+    },
+  };
+  assert.deepEqual(decodeObservations(encodeObservations([entjObservation])), [
+    entjObservation,
+  ]);
+});
+
 test("invalid or unsupported observation storage fails safely", () => {
   assert.deepEqual(decodeObservations("not-json"), []);
   assert.deepEqual(

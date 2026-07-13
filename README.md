@@ -4,7 +4,7 @@ Akasha is a private, local-first desktop lab for learning socionics through real
 
 ## Current scope
 
-- profiles for ISTP and ENFP working hypotheses;
+- profiles for ISTP, ISTJ, and ENFP working hypotheses;
 - eight-function analysis grouped by positions, aspects, and dimensions;
 - evidence linked to functions, with manual or locally suggested connections;
 - a basic relationship comparison and group overview;

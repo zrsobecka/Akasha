@@ -296,8 +296,8 @@ export default function SocionicsWorkspace() {
         <h1>Add the first person</h1>
         <p>
           Names stay in this device's local storage and are not part of the
-          repository. Start with either ISTP or ENFP; add the second person from
-          the sidebar.
+          repository. Choose any of the 16 working types; add the second person
+          from the sidebar.
         </p>
         <PersonForm onSave={addPerson} suggestedType="ISTP" />
       </main>
