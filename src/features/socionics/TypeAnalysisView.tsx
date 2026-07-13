@@ -15,11 +15,16 @@ import {
   type FunctionProfile,
   type TypeId,
 } from "./socionicsModel";
+import {
+  observationsForFunction,
+  type ObservationRecord,
+} from "./observationStorage";
 
 interface TypeAnalysisViewProps {
   typeId: TypeId;
   personName: string;
-  onOpenEvidence: () => void;
+  observations: ObservationRecord[];
+  onOpenEvidence: (fn: FunctionProfile) => void;
   onOpenQuestions: () => void;
 }
 
@@ -32,10 +37,12 @@ const VIEW_LABELS: { id: AnalysisView; label: string }[] = [
 function FunctionCard({
   fn,
   selected,
+  evidenceCount,
   onSelect,
 }: {
   fn: FunctionProfile;
   selected: boolean;
+  evidenceCount: number;
   onSelect: () => void;
 }) {
   return (
@@ -54,17 +61,24 @@ function FunctionCard({
         <span>{fn.aspect}</span>
         <span>{fn.dimension.split(" ")[0]}</span>
       </span>
+      <span className="function-evidence-count">
+        {evidenceCount === 0
+          ? "No examples"
+          : `${evidenceCount} ${evidenceCount === 1 ? "example" : "examples"}`}
+      </span>
     </button>
   );
 }
 
 function AnalysisInspector({
   fn,
+  evidenceCount,
   onOpenEvidence,
   onOpenQuestions,
 }: {
   fn: FunctionProfile;
-  onOpenEvidence: () => void;
+  evidenceCount: number;
+  onOpenEvidence: (fn: FunctionProfile) => void;
   onOpenQuestions: () => void;
 }) {
   return (
@@ -142,6 +156,15 @@ function AnalysisInspector({
         </dl>
       </section>
 
+      <section className="inspector-section">
+        <span className="section-label">Real-life evidence</span>
+        <p>
+          {evidenceCount === 0
+            ? "No examples yet. The model is not confirmed."
+            : `${evidenceCount} ${evidenceCount === 1 ? "observation is" : "observations are"} linked to this function.`}
+        </p>
+      </section>
+
       <details className="derivation-details">
         <summary>
           <Link2 size={14} /> Show how this was derived
@@ -162,7 +185,7 @@ function AnalysisInspector({
       </details>
 
       <div className="inspector-actions">
-        <button className="primary-action" onClick={onOpenEvidence}>
+        <button className="primary-action" onClick={() => onOpenEvidence(fn)}>
           <Plus size={15} /> Add real-life example
         </button>
         <button className="quiet-action" onClick={onOpenQuestions}>
@@ -176,6 +199,7 @@ function AnalysisInspector({
 export default function TypeAnalysisView({
   typeId,
   personName,
+  observations,
   onOpenEvidence,
   onOpenQuestions,
 }: TypeAnalysisViewProps) {
@@ -187,6 +211,8 @@ export default function TypeAnalysisView({
   const selected =
     profile.functions.find((fn) => fn.id === selectedPosition) ??
     profile.functions[0];
+  const evidenceCountFor = (fn: FunctionProfile) =>
+    observationsForFunction(observations, typeId, fn.id).length;
 
   return (
     <div className="analysis-view">
@@ -270,6 +296,7 @@ export default function TypeAnalysisView({
                     key={fn.id}
                     fn={fn}
                     selected={fn.id === selected.id}
+                    evidenceCount={evidenceCountFor(fn)}
                     onSelect={() => setSelectedPosition(fn.id)}
                   />
                 ))}
@@ -294,6 +321,7 @@ export default function TypeAnalysisView({
         </div>
         <AnalysisInspector
           fn={selected}
+          evidenceCount={evidenceCountFor(selected)}
           onOpenEvidence={onOpenEvidence}
           onOpenQuestions={onOpenQuestions}
         />

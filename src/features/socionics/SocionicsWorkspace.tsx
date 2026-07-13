@@ -9,7 +9,15 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import RelationshipView from "./RelationshipView";
+import RealLifeView from "./RealLifeView";
 import TypeAnalysisView from "./TypeAnalysisView";
+import {
+  loadObservations,
+  removeObservation,
+  restoreObservation,
+  saveObservations,
+  type ObservationRecord,
+} from "./observationStorage";
 import {
   createPerson,
   loadPeople,
@@ -21,6 +29,7 @@ import {
 import {
   getSupportedTypes,
   getTypeProfile,
+  type FunctionProfile,
   type TypeId,
 } from "./socionicsModel";
 
@@ -231,10 +240,16 @@ export default function SocionicsWorkspace() {
   );
   const [activeTab, setActiveTab] = useState<ProfileTab>("analysis");
   const [showAddPerson, setShowAddPerson] = useState(false);
+  const [observations, setObservations] =
+    useState<ObservationRecord[]>(loadObservations);
+  const [evidenceTarget, setEvidenceTarget] = useState<FunctionProfile | null>(
+    null,
+  );
   const [query, setQuery] = useState("");
   const addPersonButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => savePeople(people), [people]);
+  useEffect(() => saveObservations(observations), [observations]);
   useEffect(() => {
     if (selectedId) saveSelectedPersonId(selectedId);
   }, [selectedId]);
@@ -393,14 +408,34 @@ export default function SocionicsWorkspace() {
             <TypeAnalysisView
               typeId={selected.typeId}
               personName={selected.name}
-              onOpenEvidence={() => setActiveTab("real-life")}
+              observations={observations.filter(
+                (observation) => observation.personId === selected.id,
+              )}
+              onOpenEvidence={(fn) => {
+                setEvidenceTarget(fn);
+                setActiveTab("real-life");
+              }}
               onOpenQuestions={() => setActiveTab("hypothesis")}
             />
           )}
           {activeTab === "real-life" && (
-            <PlaceholderPanel
-              kind="evidence"
-              onGo={() => setActiveTab("analysis")}
+            <RealLifeView
+              person={selected}
+              observations={observations}
+              initialTarget={evidenceTarget}
+              onSave={(observation) =>
+                setObservations((current) => [...current, observation])
+              }
+              onDelete={(observationId) =>
+                setObservations((current) =>
+                  removeObservation(current, observationId),
+                )
+              }
+              onRestore={(observation) =>
+                setObservations((current) =>
+                  restoreObservation(current, observation),
+                )
+              }
             />
           )}
           {activeTab === "hypothesis" && (
