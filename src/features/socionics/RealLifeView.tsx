@@ -42,6 +42,7 @@ export default function RealLifeView({
   person,
   observations,
   initialTarget,
+  hidden,
   onSave,
   onDelete,
   onRestore,
@@ -49,6 +50,7 @@ export default function RealLifeView({
   person: PersonRecord;
   observations: ObservationRecord[];
   initialTarget: FunctionProfile | null;
+  hidden?: boolean;
   onSave: (observation: ObservationRecord) => void;
   onDelete: (observationId: string) => void;
   onRestore: (observation: ObservationRecord) => void;
@@ -203,7 +205,7 @@ export default function RealLifeView({
   };
 
   return (
-    <div className="real-life-view">
+    <div className="real-life-view" hidden={hidden}>
       <header className="real-life-heading">
         <div>
           <span className="eyebrow">

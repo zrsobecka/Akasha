@@ -239,6 +239,7 @@ export default function SocionicsWorkspace() {
     loadSelectedPersonId(),
   );
   const [activeTab, setActiveTab] = useState<ProfileTab>("analysis");
+  const [openedRealLife, setOpenedRealLife] = useState(false);
   const [showAddPerson, setShowAddPerson] = useState(false);
   const [observations, setObservations] =
     useState<ObservationRecord[]>(loadObservations);
@@ -395,7 +396,13 @@ export default function SocionicsWorkspace() {
             <button
               key={tab.id}
               className={activeTab === tab.id ? "active" : ""}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                if (tab.id === "real-life") {
+                  setEvidenceTarget(null);
+                  setOpenedRealLife(true);
+                }
+                setActiveTab(tab.id);
+              }}
             >
               {tab.label}
             </button>
@@ -413,16 +420,19 @@ export default function SocionicsWorkspace() {
               )}
               onOpenEvidence={(fn) => {
                 setEvidenceTarget(fn);
+                setOpenedRealLife(true);
                 setActiveTab("real-life");
               }}
               onOpenQuestions={() => setActiveTab("hypothesis")}
             />
           )}
-          {activeTab === "real-life" && (
+          {openedRealLife && (
             <RealLifeView
+              key={selected.id}
               person={selected}
               observations={observations}
               initialTarget={evidenceTarget}
+              hidden={activeTab !== "real-life"}
               onSave={(observation) =>
                 setObservations((current) => [...current, observation])
               }
