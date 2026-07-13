@@ -8,7 +8,7 @@ This folder holds the local Windows executable used by the desktop shortcut.
 - Version: `0.1.0`
 - Target: Windows x64, local portable executable
 - Build command (PowerShell): `$env:CARGO_TARGET_DIR = "$env:TEMP\akasha-tauri-target"; npm run tauri -- build --no-bundle`
-- SHA-256: `9033EE08F9DE492533B51B024DF45EB01FCD6D0882564CD8ADA7638F725B83E3`
+- SHA-256: `45727A6E96ED3905E8744CAA8E94B995D523AF0C34FF6927DAA47BFA1EF04EF1`
 - Built: 2026-07-13
 
 The executable embeds the production Vite/Tailwind frontend and does not depend on the development server.

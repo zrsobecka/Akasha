@@ -45,32 +45,56 @@ test("valid structured suggestions are accepted for the current type", () => {
   assert.equal(result.suggestions[0].positionId, 1);
 });
 
-test("a suggestion cannot invent a function outside the current profile", () => {
-  assert.throws(
-    () =>
-      parseSuggestionResponse(
-        JSON.stringify({
-          suggestions: [
-            {
-              positionId: 1,
-              element: "Ne",
-              confidence: "high",
-              reason: "Mismatched element and position.",
-            },
-          ],
-          alternativeExplanation: "",
-        }),
-        istpFunctions,
-      ),
-    LmStudioError,
+test("a mismatched position is repaired using the suggested element", () => {
+  const result = parseSuggestionResponse(
+    JSON.stringify({
+      suggestions: [
+        {
+          positionId: 1,
+          element: "Ne",
+          confidence: "high",
+          reason: "The person quickly considered another possibility.",
+        },
+      ],
+      alternativeExplanation: "",
+    }),
+    istpFunctions,
   );
+
+  assert.equal(result.suggestions[0].element, "Ne");
+  assert.equal(result.suggestions[0].positionId, 7);
 });
 
-test("invalid JSON and duplicate suggestions fail safely", () => {
+test("invalid JSON fails safely and duplicate suggestions are collapsed", () => {
   assert.throws(
     () => parseSuggestionResponse("not-json", istpFunctions),
     LmStudioError,
   );
+  const result = parseSuggestionResponse(
+    JSON.stringify({
+      suggestions: [
+        {
+          positionId: 1,
+          element: "Ti",
+          confidence: "high",
+          reason: "First",
+        },
+        {
+          positionId: 1,
+          element: "Ti",
+          confidence: "medium",
+          reason: "Duplicate",
+        },
+      ],
+      alternativeExplanation: "",
+    }),
+    istpFunctions,
+  );
+
+  assert.equal(result.suggestions.length, 1);
+});
+
+test("overlong Gemma output is rejected before it reaches the UI", () => {
   assert.throws(
     () =>
       parseSuggestionResponse(
@@ -80,16 +104,10 @@ test("invalid JSON and duplicate suggestions fail safely", () => {
               positionId: 1,
               element: "Ti",
               confidence: "high",
-              reason: "First",
-            },
-            {
-              positionId: 1,
-              element: "Ti",
-              confidence: "medium",
-              reason: "Duplicate",
+              reason: "x".repeat(241),
             },
           ],
-          alternativeExplanation: "",
+          alternativeExplanation: "short",
         }),
         istpFunctions,
       ),

@@ -175,47 +175,65 @@ export function parseSuggestionResponse(
   if (
     !Array.isArray(candidate.suggestions) ||
     candidate.suggestions.length === 0 ||
-    candidate.suggestions.length > 3 ||
-    typeof candidate.alternativeExplanation !== "string"
+    candidate.suggestions.length > 2 ||
+    typeof candidate.alternativeExplanation !== "string" ||
+    candidate.alternativeExplanation.length > 200
   ) {
     throw new LmStudioError("The local model returned an invalid suggestion.");
   }
 
   const seen = new Set<number>();
-  const suggestions = candidate.suggestions.map((value) => {
+  const suggestions: FunctionSuggestion[] = [];
+  for (const value of candidate.suggestions) {
     if (!value || typeof value !== "object") {
       throw new LmStudioError(
         "The local model returned an invalid suggestion.",
       );
     }
     const item = value as Partial<FunctionSuggestion>;
-    const fn = functions.find(
+    const exactMatch = functions.find(
       (functionProfile) =>
         functionProfile.id === item.positionId &&
         functionProfile.element === item.element,
     );
+    const elementMatch = functions.find(
+      (functionProfile) => functionProfile.element === item.element,
+    );
+    const positionMatch = functions.find(
+      (functionProfile) => functionProfile.id === item.positionId,
+    );
+    // Local models sometimes choose the intended element correctly but copy the
+    // wrong position number. The element carries the semantic choice, so map it
+    // back to its actual position in the current type profile.
+    const fn = exactMatch ?? elementMatch ?? positionMatch;
     if (
       !fn ||
-      seen.has(fn.id) ||
       (item.confidence !== "high" &&
         item.confidence !== "medium" &&
         item.confidence !== "low") ||
       typeof item.reason !== "string" ||
       !item.reason.trim() ||
-      item.reason.length > 600
+      item.reason.length > 240
     ) {
       throw new LmStudioError(
-        "The local model suggested a function outside the current type profile.",
+        "The local model did not return a usable function suggestion. Try again or choose a connection manually.",
       );
     }
+    if (seen.has(fn.id)) continue;
     seen.add(fn.id);
-    return {
+    suggestions.push({
       positionId: fn.id,
       element: fn.element,
       confidence: item.confidence,
       reason: item.reason.trim(),
-    };
-  });
+    });
+  }
+
+  if (suggestions.length === 0) {
+    throw new LmStudioError(
+      "The local model did not return a usable function suggestion. Try again or choose a connection manually.",
+    );
+  }
 
   return {
     suggestions,
@@ -261,7 +279,7 @@ export async function suggestFunctionConnections({
             {
               role: "system",
               content:
-                "You help a user examine a working socionics hypothesis. Treat the observation as uncertain evidence, not proof. Select only from the supplied function catalog. Prefer 1 strong suggestion; include up to 3 only when ambiguity is meaningful. Explain reasons in the same language as the observation. Mention a plausible non-socionics explanation.",
+                "You help a user examine a working socionics hypothesis. Treat the observation as uncertain evidence, not proof. Select the best matching function from the supplied catalog, even when it differs from the function currently open in the UI. Copy both its position number and element symbol from the same catalog row. Return 1 strong suggestion, or 2 only when ambiguity is meaningful. Keep every reason and the alternative explanation concise: one sentence each, without repetition. Explain them in the same language as the observation.",
             },
             {
               role: "user",
@@ -280,7 +298,7 @@ export async function suggestFunctionConnections({
                   suggestions: {
                     type: "array",
                     minItems: 1,
-                    maxItems: 3,
+                    maxItems: 2,
                     items: {
                       type: "object",
                       additionalProperties: false,
@@ -291,7 +309,7 @@ export async function suggestFunctionConnections({
                           type: "string",
                           enum: ["high", "medium", "low"],
                         },
-                        reason: { type: "string" },
+                        reason: { type: "string", maxLength: 240 },
                       },
                       required: [
                         "positionId",
@@ -301,7 +319,10 @@ export async function suggestFunctionConnections({
                       ],
                     },
                   },
-                  alternativeExplanation: { type: "string" },
+                  alternativeExplanation: {
+                    type: "string",
+                    maxLength: 200,
+                  },
                 },
                 required: ["suggestions", "alternativeExplanation"],
               },
