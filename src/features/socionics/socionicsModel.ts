@@ -1,4 +1,21 @@
-export const SUPPORTED_TYPES = ["ISTP", "ISTJ", "ENFP"] as const;
+export const SUPPORTED_TYPES = [
+  "ENFJ",
+  "ENFP",
+  "ENTJ",
+  "ENTP",
+  "ESFJ",
+  "ESFP",
+  "ESTJ",
+  "ESTP",
+  "INFJ",
+  "INFP",
+  "INTJ",
+  "INTP",
+  "ISFJ",
+  "ISFP",
+  "ISTJ",
+  "ISTP",
+] as const;
 export type TypeId = (typeof SUPPORTED_TYPES)[number];
 export type ElementId = "Ti" | "Te" | "Fi" | "Fe" | "Si" | "Se" | "Ni" | "Ne";
 export type PositionId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -291,9 +308,113 @@ const TYPE_DATA: Record<
     quadra: string;
     club: string;
     stack: readonly ElementId[];
-    summaries: readonly { overview: string; growth: string }[];
+    summaries?: readonly { overview: string; growth: string }[];
   }
 > = {
+  ENFJ: {
+    core: "FeNi",
+    leadingSign: "Fe",
+    labels: "EIE",
+    quadra: "Beta",
+    club: "Humanitarians",
+    stack: ["Fe", "Ni", "Se", "Ti", "Fi", "Ne", "Si", "Te"],
+  },
+  ENTJ: {
+    core: "TeNi",
+    leadingSign: "Te",
+    labels: "LIE",
+    quadra: "Gamma",
+    club: "Researchers",
+    stack: ["Te", "Ni", "Se", "Fi", "Ti", "Ne", "Si", "Fe"],
+  },
+  ENTP: {
+    core: "NeTi",
+    leadingSign: "Ne",
+    labels: "ILE",
+    quadra: "Alpha",
+    club: "Researchers",
+    stack: ["Ne", "Ti", "Fe", "Si", "Ni", "Te", "Fi", "Se"],
+  },
+  ESFJ: {
+    core: "FeSi",
+    leadingSign: "Fe",
+    labels: "ESE",
+    quadra: "Alpha",
+    club: "Socials",
+    stack: ["Fe", "Si", "Ne", "Ti", "Fi", "Se", "Ni", "Te"],
+  },
+  ESFP: {
+    core: "SeFi",
+    leadingSign: "Se",
+    labels: "SEE",
+    quadra: "Gamma",
+    club: "Socials",
+    stack: ["Se", "Fi", "Te", "Ni", "Si", "Fe", "Ti", "Ne"],
+  },
+  ESTJ: {
+    core: "TeSi",
+    leadingSign: "Te",
+    labels: "LSE",
+    quadra: "Delta",
+    club: "Pragmatists",
+    stack: ["Te", "Si", "Ne", "Fi", "Ti", "Se", "Ni", "Fe"],
+  },
+  ESTP: {
+    core: "SeTi",
+    leadingSign: "Se",
+    labels: "SLE",
+    quadra: "Beta",
+    club: "Pragmatists",
+    stack: ["Se", "Ti", "Fe", "Ni", "Si", "Te", "Fi", "Ne"],
+  },
+  INFJ: {
+    core: "NiFe",
+    leadingSign: "Ni",
+    labels: "IEI",
+    quadra: "Beta",
+    club: "Humanitarians",
+    stack: ["Ni", "Fe", "Ti", "Se", "Ne", "Fi", "Te", "Si"],
+  },
+  INFP: {
+    core: "FiNe",
+    leadingSign: "Fi",
+    labels: "EII",
+    quadra: "Delta",
+    club: "Humanitarians",
+    stack: ["Fi", "Ne", "Si", "Te", "Fe", "Ni", "Se", "Ti"],
+  },
+  INTJ: {
+    core: "NiTe",
+    leadingSign: "Ni",
+    labels: "ILI",
+    quadra: "Gamma",
+    club: "Researchers",
+    stack: ["Ni", "Te", "Fi", "Se", "Ne", "Ti", "Fe", "Si"],
+  },
+  INTP: {
+    core: "TiNe",
+    leadingSign: "Ti",
+    labels: "LII",
+    quadra: "Alpha",
+    club: "Researchers",
+    stack: ["Ti", "Ne", "Si", "Fe", "Te", "Ni", "Se", "Fi"],
+  },
+  ISFJ: {
+    core: "SiFe",
+    leadingSign: "Si",
+    labels: "SEI",
+    quadra: "Alpha",
+    club: "Socials",
+    stack: ["Si", "Fe", "Ti", "Ne", "Se", "Fi", "Te", "Ni"],
+  },
+  ISFP: {
+    core: "FiSe",
+    leadingSign: "Fi",
+    labels: "ESI",
+    quadra: "Gamma",
+    club: "Socials",
+    stack: ["Fi", "Se", "Ni", "Te", "Fe", "Si", "Ne", "Ti"],
+  },
   ISTP: {
     core: "TiSe",
     leadingSign: "Ti+",
@@ -515,12 +636,61 @@ function getTemperament(typeId: TypeId): string {
   return `${code} · ${TEMPERAMENT_NAMES[code]}`;
 }
 
+const POSITION_COPY: Record<PositionId, { overview: string; growth: string }> =
+  {
+    1: {
+      overview: "This is the primary lens for interpreting experience.",
+      growth:
+        "Use this natural strength without expecting every situation to fit it.",
+    },
+    2: {
+      overview: "This is a flexible strength used to respond and create.",
+      growth:
+        "Let this capability support the leading function without overextending it.",
+    },
+    3: {
+      overview:
+        "This valued area often brings energy, aspiration and experimentation.",
+      growth:
+        "Build confidence here through concrete practice rather than self-pressure.",
+    },
+    4: {
+      overview:
+        "This valued but vulnerable area often benefits from patient support.",
+      growth:
+        "Treat uncertainty here as a need for experience, not as a personal verdict.",
+    },
+    5: {
+      overview:
+        "This is a strong but subdued perspective that may be used selectively.",
+      growth:
+        "Notice when this quiet capability contains evidence the preferred lens missed.",
+    },
+    6: {
+      overview:
+        "This strong background process often works without becoming part of identity.",
+      growth:
+        "Make this capability visible when it can help other people understand your reasoning.",
+    },
+    7: {
+      overview:
+        "This subdued weak area can be simplified when a situation becomes demanding.",
+      growth:
+        "Slow down, seek examples and test assumptions before drawing conclusions here.",
+    },
+    8: {
+      overview: "This subdued weak area may emerge defensively under pressure.",
+      growth:
+        "Approach this area with curiosity and support instead of forcing certainty.",
+    },
+  };
+
 export function getTypeProfile(typeId: TypeId): TypeProfile {
   const data = TYPE_DATA[typeId];
   const functions = data.stack.map((element, index) => {
     const position = POSITION_META[(index + 1) as PositionId];
     const elementMeta = ELEMENTS[element];
-    const summary = data.summaries[index];
+    const summary = data.summaries?.[index] ?? POSITION_COPY[position.id];
     return {
       ...position,
       element,
@@ -696,4 +866,11 @@ export function getRelationship(
 
 export function getSupportedTypes(): TypeId[] {
   return [...SUPPORTED_TYPES];
+}
+
+export function isSupportedType(value: unknown): value is TypeId {
+  return (
+    typeof value === "string" &&
+    (SUPPORTED_TYPES as readonly string[]).includes(value)
+  );
 }

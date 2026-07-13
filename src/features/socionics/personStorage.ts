@@ -1,4 +1,4 @@
-import type { TypeId } from "./socionicsModel";
+import { isSupportedType, type TypeId } from "./socionicsModel.ts";
 
 export interface PersonRecord {
   id: string;
@@ -22,9 +22,7 @@ function isPersonRecord(value: unknown): value is PersonRecord {
   return (
     typeof person.id === "string" &&
     typeof person.name === "string" &&
-    (person.typeId === "ISTP" ||
-      person.typeId === "ISTJ" ||
-      person.typeId === "ENFP") &&
+    isSupportedType(person.typeId) &&
     typeof person.relationship === "string" &&
     (person.confidence === "Exploring" ||
       person.confidence === "Working" ||
@@ -33,9 +31,13 @@ function isPersonRecord(value: unknown): value is PersonRecord {
 }
 
 export function loadPeople(): PersonRecord[] {
+  return decodePeople(window.localStorage.getItem(STORAGE_KEY));
+}
+
+export function decodePeople(raw: string | null): PersonRecord[] {
+  if (!raw) return [];
+
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
     const stored = JSON.parse(raw) as Partial<StoredPeople>;
     if (stored.version !== 1 || !Array.isArray(stored.people)) return [];
     return stored.people.filter(isPersonRecord);
@@ -45,8 +47,12 @@ export function loadPeople(): PersonRecord[] {
 }
 
 export function savePeople(people: PersonRecord[]): void {
+  window.localStorage.setItem(STORAGE_KEY, encodePeople(people));
+}
+
+export function encodePeople(people: PersonRecord[]): string {
   const stored: StoredPeople = { version: 1, people };
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+  return JSON.stringify(stored);
 }
 
 export function createPerson(

@@ -2,9 +2,29 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   getRelationship,
+  getSupportedTypes,
   getTypeProfile,
   groupFunctions,
+  isSupportedType,
 } from "../src/features/socionics/socionicsModel.ts";
+
+test("all 16 types are available and derive complete profiles", () => {
+  const types = getSupportedTypes();
+
+  assert.equal(types.length, 16);
+  assert.equal(new Set(types).size, 16);
+  assert.deepEqual(types, [...types].sort());
+
+  for (const type of types) {
+    const profile = getTypeProfile(type);
+    assert.equal(profile.id, type);
+    assert.equal(profile.functions.length, 8);
+    assert.equal(new Set(profile.functions.map((fn) => fn.element)).size, 8);
+    assert.equal(isSupportedType(type), true);
+  }
+
+  assert.equal(isSupportedType("XXXX"), false);
+});
 
 test("ISTP derives the expected eight-function stack", () => {
   const profile = getTypeProfile("ISTP");

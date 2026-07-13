@@ -36,18 +36,18 @@ test("saved observations survive an encode and decode round trip", () => {
   assert.deepEqual(decoded, [observation]);
 });
 
-test("ISTJ observations are accepted by local storage validation", () => {
-  const istjObservation = {
+test("newly supported type observations pass local storage validation", () => {
+  const entjObservation = {
     ...observation,
-    id: "observation-istj",
+    id: "observation-entj",
     target: {
       ...observation.target,
-      typeId: "ISTJ",
-      element: "Si",
+      typeId: "ENTJ",
+      element: "Te",
     },
   };
-  assert.deepEqual(decodeObservations(encodeObservations([istjObservation])), [
-    istjObservation,
+  assert.deepEqual(decodeObservations(encodeObservations([entjObservation])), [
+    entjObservation,
   ]);
 });
 

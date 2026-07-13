@@ -1,4 +1,8 @@
-import type { FunctionProfile, TypeId } from "./socionicsModel";
+import {
+  isSupportedType,
+  type FunctionProfile,
+  type TypeId,
+} from "./socionicsModel.ts";
 
 export type EvidenceRating = "fits" | "partial" | "contradicts" | "uncertain";
 
@@ -57,9 +61,7 @@ function isObservation(value: unknown): value is ObservationRecord {
     RATINGS.includes(observation.rating as EvidenceRating) &&
     typeof observation.createdAt === "string" &&
     !!target &&
-    (target.typeId === "ISTP" ||
-      target.typeId === "ISTJ" ||
-      target.typeId === "ENFP") &&
+    isSupportedType(target.typeId) &&
     Number.isInteger(target.positionId) &&
     typeof target.element === "string" &&
     typeof target.positionName === "string" &&
