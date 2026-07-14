@@ -2,12 +2,21 @@ import {
   BookOpen,
   CircleHelp,
   Grid2X2,
+  Pencil,
   Plus,
+  Save,
   Search,
   UsersRound,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import RelationshipView from "./RelationshipView";
 import RealLifeView from "./RealLifeView";
 import TypeAnalysisView from "./TypeAnalysisView";
@@ -24,6 +33,7 @@ import {
   loadSelectedPersonId,
   savePeople,
   saveSelectedPersonId,
+  updatePerson,
   type PersonRecord,
 } from "./personStorage";
 import { resolveComparisonPersonId } from "./relationshipSelection";
@@ -54,15 +64,17 @@ const TABS: { id: ProfileTab; label: string }[] = [
 function PersonForm({
   onSave,
   onCancel,
-  suggestedType,
+  initialValues,
+  mode,
 }: {
   onSave: (name: string, type: TypeId, relationship: string) => void;
   onCancel?: () => void;
-  suggestedType: TypeId;
+  initialValues: Pick<PersonRecord, "name" | "typeId" | "relationship">;
+  mode: "create" | "edit";
 }) {
-  const [name, setName] = useState("");
-  const [typeId, setTypeId] = useState<TypeId>(suggestedType);
-  const [relationship, setRelationship] = useState("");
+  const [name, setName] = useState(initialValues.name);
+  const [typeId, setTypeId] = useState<TypeId>(initialValues.typeId);
+  const [relationship, setRelationship] = useState(initialValues.relationship);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -117,14 +129,92 @@ function PersonForm({
           className="primary-action"
           disabled={!name.trim()}
         >
-          <Plus size={15} /> Add person
+          {mode === "create" ? <Plus size={15} /> : <Save size={15} />}
+          {mode === "create" ? "Add person" : "Save changes"}
         </button>
       </div>
     </form>
   );
 }
 
-function OverviewPanel({ person }: { person: PersonRecord }) {
+function PersonModal({
+  titleId,
+  eyebrow,
+  title,
+  onClose,
+  children,
+}: {
+  titleId: string;
+  eyebrow: string;
+  title: string;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      onClose();
+      return;
+    }
+    if (event.key !== "Tab") return;
+
+    const focusable = Array.from(
+      event.currentTarget.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (!first || !last) return;
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  return (
+    <div
+      className="modal-backdrop"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <section
+        className="person-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        onKeyDown={handleKeyDown}
+      >
+        <header>
+          <div>
+            <span className="eyebrow">{eyebrow}</span>
+            <h2 id={titleId}>{title}</h2>
+          </div>
+          <button className="icon-action" onClick={onClose} aria-label="Close">
+            <X size={17} />
+          </button>
+        </header>
+        {children}
+      </section>
+    </div>
+  );
+}
+
+function OverviewPanel({
+  person,
+  onEdit,
+  editButtonRef,
+}: {
+  person: PersonRecord;
+  onEdit: () => void;
+  editButtonRef: RefObject<HTMLButtonElement | null>;
+}) {
   const profile = getTypeProfile(person.typeId);
   return (
     <div className="overview-panel">
@@ -137,7 +227,12 @@ function OverviewPanel({ person }: { person: PersonRecord }) {
           <h1>{person.name}</h1>
           <p>{person.relationship || "Relationship not described yet"}</p>
         </div>
-        <span className="type-code">{person.typeId}</span>
+        <div className="person-hero-actions">
+          <span className="type-code">{person.typeId}</span>
+          <button ref={editButtonRef} className="quiet-action" onClick={onEdit}>
+            <Pencil size={14} /> Edit profile
+          </button>
+        </div>
       </section>
       <div className="overview-grid">
         <section>
@@ -242,6 +337,7 @@ export default function SocionicsWorkspace() {
   const [activeTab, setActiveTab] = useState<ProfileTab>("analysis");
   const [openedRealLife, setOpenedRealLife] = useState(false);
   const [showAddPerson, setShowAddPerson] = useState(false);
+  const [editingPersonId, setEditingPersonId] = useState<string | null>(null);
   const [comparisonPersonId, setComparisonPersonId] = useState<string | null>(
     null,
   );
@@ -252,6 +348,7 @@ export default function SocionicsWorkspace() {
   );
   const [query, setQuery] = useState("");
   const addPersonButtonRef = useRef<HTMLButtonElement>(null);
+  const editPersonButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => savePeople(people), [people]);
   useEffect(() => saveObservations(observations), [observations]);
@@ -261,20 +358,11 @@ export default function SocionicsWorkspace() {
   useEffect(() => {
     if (!selectedId && people[0]) setSelectedId(people[0].id);
   }, [people, selectedId]);
-  useEffect(() => {
-    if (!showAddPerson) return;
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setShowAddPerson(false);
-        requestAnimationFrame(() => addPersonButtonRef.current?.focus());
-      }
-    };
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
-  }, [showAddPerson]);
 
   const selected =
     people.find((person) => person.id === selectedId) ?? people[0] ?? null;
+  const editingPerson =
+    people.find((person) => person.id === editingPersonId) ?? null;
   const resolvedComparisonPersonId = selected
     ? resolveComparisonPersonId(people, selected.id, comparisonPersonId)
     : null;
@@ -282,11 +370,38 @@ export default function SocionicsWorkspace() {
     person.name.toLowerCase().includes(query.toLowerCase()),
   );
 
+  const closeAddPerson = () => {
+    setShowAddPerson(false);
+    requestAnimationFrame(() => addPersonButtonRef.current?.focus());
+  };
+
+  const closeEditPerson = () => {
+    setEditingPersonId(null);
+    requestAnimationFrame(() => editPersonButtonRef.current?.focus());
+  };
+
   const addPerson = (name: string, typeId: TypeId, relationship: string) => {
     const person = createPerson(name, typeId, relationship);
     setPeople((current) => [...current, person]);
     setSelectedId(person.id);
     setShowAddPerson(false);
+  };
+
+  const updateExistingPerson = (
+    name: string,
+    typeId: TypeId,
+    relationship: string,
+  ) => {
+    if (!editingPerson) return;
+    setPeople((current) =>
+      current.map((person) =>
+        person.id === editingPerson.id
+          ? updatePerson(person, name, typeId, relationship)
+          : person,
+      ),
+    );
+    setEditingPersonId(null);
+    requestAnimationFrame(() => editPersonButtonRef.current?.focus());
   };
 
   if (people.length === 0) {
@@ -302,7 +417,11 @@ export default function SocionicsWorkspace() {
           repository. Choose any of the 16 working types; add the second person
           from the sidebar.
         </p>
-        <PersonForm onSave={addPerson} suggestedType="ISTP" />
+        <PersonForm
+          onSave={addPerson}
+          initialValues={{ name: "", typeId: "ISTP", relationship: "" }}
+          mode="create"
+        />
       </main>
     );
   }
@@ -413,7 +532,13 @@ export default function SocionicsWorkspace() {
         </nav>
 
         <div className="profile-content">
-          {activeTab === "person" && <OverviewPanel person={selected} />}
+          {activeTab === "person" && (
+            <OverviewPanel
+              person={selected}
+              onEdit={() => setEditingPersonId(selected.id)}
+              editButtonRef={editPersonButtonRef}
+            />
+          )}
           {activeTab === "analysis" && (
             <TypeAnalysisView
               typeId={selected.typeId}
@@ -470,43 +595,41 @@ export default function SocionicsWorkspace() {
       </main>
 
       {showAddPerson && (
-        <div
-          className="modal-backdrop"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setShowAddPerson(false);
-          }}
+        <PersonModal
+          titleId="add-person-title"
+          eyebrow="Local person record"
+          title="Add another person"
+          onClose={closeAddPerson}
         >
-          <section
-            className="person-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="add-person-title"
-          >
-            <header>
-              <div>
-                <span className="eyebrow">Local person record</span>
-                <h2 id="add-person-title">Add another person</h2>
-              </div>
-              <button
-                className="icon-action"
-                onClick={() => setShowAddPerson(false)}
-                aria-label="Close"
-              >
-                <X size={17} />
-              </button>
-            </header>
-            <PersonForm
-              onSave={addPerson}
-              onCancel={() => setShowAddPerson(false)}
-              suggestedType={
-                people.some((person) => person.typeId === "ISTP")
-                  ? "ENFP"
-                  : "ISTP"
-              }
-            />
-          </section>
-        </div>
+          <PersonForm
+            onSave={addPerson}
+            onCancel={closeAddPerson}
+            initialValues={{
+              name: "",
+              typeId: people.some((person) => person.typeId === "ISTP")
+                ? "ENFP"
+                : "ISTP",
+              relationship: "",
+            }}
+            mode="create"
+          />
+        </PersonModal>
+      )}
+
+      {editingPerson && (
+        <PersonModal
+          titleId="edit-person-title"
+          eyebrow="Local person record"
+          title={`Edit ${editingPerson.name}`}
+          onClose={closeEditPerson}
+        >
+          <PersonForm
+            onSave={updateExistingPerson}
+            onCancel={closeEditPerson}
+            initialValues={editingPerson}
+            mode="edit"
+          />
+        </PersonModal>
       )}
     </div>
   );

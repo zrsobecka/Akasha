@@ -1291,6 +1291,12 @@ summary:focus-visible {
   color: var(--muted);
   font-size: var(--font-body);
 }
+.person-hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
 .overview-grid,
 .groups-grid {
   display: grid;
@@ -2082,7 +2088,7 @@ summary:focus-visible {
     height: 54px;
     border-radius: 13px;
   }
-  .person-hero-card .type-code {
+  .person-hero-actions {
     grid-column: 1 / -1;
     justify-self: start;
   }

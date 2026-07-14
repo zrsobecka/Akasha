@@ -69,6 +69,21 @@ export function createPerson(
   };
 }
 
+export function updatePerson(
+  person: PersonRecord,
+  name: string,
+  typeId: TypeId,
+  relationship: string,
+): PersonRecord {
+  return {
+    ...person,
+    name: name.trim(),
+    typeId,
+    relationship: relationship.trim(),
+    confidence: person.typeId === typeId ? person.confidence : "Working",
+  };
+}
+
 export function loadSelectedPersonId(): string | null {
   return window.localStorage.getItem(SELECTED_KEY);
 }

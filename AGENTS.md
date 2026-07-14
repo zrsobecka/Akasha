@@ -8,11 +8,13 @@ Akasha is a private, local-first Tauri desktop app for learning socionics throug
 - Run `cargo check` from `src-tauri` after Rust or Tauri changes.
 - For UI behavior, verify the real Tauri window when browser storage or native integration matters.
 - After every user-visible application change, rebuild `app/Akasha.exe`, replace and verify the portable artifact, and ensure `%USERPROFILE%\Desktop\Akasha.lnk` exists and targets that exact executable before reporting the change as complete.
+- Whenever rebuilding `app/Akasha.exe` or creating, replacing, or repairing `Akasha.lnk`, use `docs/brand/akasha-desktop-icon.png` as the canonical project icon for both the embedded Tauri icon set and the shortcut.
 
 ## Architecture and data
 
 - Keep socionics rules in the domain model, not duplicated across React components.
 - Keep private profiles and observations in local application storage; never add real personal data to Git.
+- Editing a person's type must preserve the profile ID and observations, but reset confidence to `Working` because the new type is a new hypothesis.
 - LM Studio requests go through Tauri commands because direct WebView `fetch` is unreliable with its CORS behavior.
 - Unsaved form state must survive ordinary tab changes; hiding a mounted view is preferable when unmounting would discard active work.
 
