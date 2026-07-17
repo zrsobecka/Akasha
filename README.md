@@ -65,6 +65,17 @@ npm run tauri build
 
 Generated executables and installers are local artifacts and are ignored by Git. See [app/README.md](app/README.md) for the Windows build notes.
 
+## Changing the app icon
+
+Put one square transparent PNG (preferably `1024x1024 px`, minimum `256x256 px`)
+in `..\new-icons\akasha.png`. From `Desktop Apps`, run:
+
+```powershell
+.\tools\Apply-NewIcon.ps1 -App Akasha
+```
+
+Use `-Publish` after approving the icon to rebuild the executable and refresh its desktop shortcut.
+
 ## Project documentation
 
 - [Codebase map](CODEBASE.md)

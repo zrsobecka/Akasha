@@ -29,4 +29,5 @@ Akasha is a local-first Tauri desktop application for learning socionics through
 - Keep Cargo output outside Dropbox or other synchronized folders when file locking disrupts builds; `app/README.md` shows a portable approach.
 - Run Vite and Tauri commands from the repository's real path rather than through a filesystem junction or symlink that changes emitted asset paths.
 - After changing Tauri icons, use a fresh `CARGO_TARGET_DIR`; cached Windows resources can otherwise leave an old icon embedded in the executable.
+- For a release or icon build, set that fresh `CARGO_TARGET_DIR` explicitly in the build command; do not rely on an old local Cargo config after the project has moved paths.
 - Preserve the LF policy in `.gitattributes`.
