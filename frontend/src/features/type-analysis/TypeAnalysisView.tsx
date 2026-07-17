@@ -14,11 +14,11 @@ import {
   type AnalysisView,
   type FunctionProfile,
   type TypeId,
-} from "./socionicsModel";
+} from "../../domain/socionics/socionicsModel";
 import {
   observationsForFunction,
   type ObservationRecord,
-} from "./observationStorage";
+} from "../../infrastructure/persistence/local-storage/observationStorage";
 
 interface TypeAnalysisViewProps {
   typeId: TypeId;

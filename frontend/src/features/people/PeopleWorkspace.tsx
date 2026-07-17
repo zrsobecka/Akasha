@@ -17,16 +17,16 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
-import RelationshipView from "./RelationshipView";
-import RealLifeView from "./RealLifeView";
-import TypeAnalysisView from "./TypeAnalysisView";
+import RelationshipView from "../relationships/RelationshipView";
+import RealLifeView from "../observations/RealLifeView";
+import TypeAnalysisView from "../type-analysis/TypeAnalysisView";
 import {
   loadObservations,
   removeObservation,
   restoreObservation,
   saveObservations,
   type ObservationRecord,
-} from "./observationStorage";
+} from "../../infrastructure/persistence/local-storage/observationStorage";
 import {
   createPerson,
   loadPeople,
@@ -35,8 +35,8 @@ import {
   saveSelectedPersonId,
   updatePerson,
   type PersonRecord,
-} from "./personStorage";
-import { resolveComparisonPersonId } from "./relationshipSelection";
+} from "../../infrastructure/persistence/local-storage/personStorage";
+import { resolveComparisonPersonId } from "../relationships/relationshipSelection";
 import {
   getSupportedTypes,
   getTypeGroupMemberships,
@@ -44,7 +44,7 @@ import {
   type FunctionProfile,
   type TypeGroupMembership,
   type TypeId,
-} from "./socionicsModel";
+} from "../../domain/socionics/socionicsModel";
 
 type ProfileTab =
   | "person"
@@ -414,7 +414,7 @@ function GroupsPanel({ person }: { person: PersonRecord }) {
   );
 }
 
-export default function SocionicsWorkspace() {
+export default function PeopleWorkspace() {
   const [people, setPeople] = useState<PersonRecord[]>(loadPeople);
   const [selectedId, setSelectedId] = useState<string | null>(() =>
     loadSelectedPersonId(),

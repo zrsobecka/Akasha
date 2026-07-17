@@ -7,7 +7,7 @@ import {
   getTypeProfile,
   groupFunctions,
   isSupportedType,
-} from "../src/features/socionics/socionicsModel.ts";
+} from "../frontend/src/domain/socionics/socionicsModel.ts";
 
 test("all 16 types are available and derive complete profiles", () => {
   const types = getSupportedTypes();

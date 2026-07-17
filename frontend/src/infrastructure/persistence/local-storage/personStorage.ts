@@ -1,12 +1,10 @@
-import { isSupportedType, type TypeId } from "./socionicsModel.ts";
+import type { PersonRecord } from "../../../domain/person/person";
+import {
+  isSupportedType,
+  type TypeId,
+} from "../../../domain/socionics/socionicsModel";
 
-export interface PersonRecord {
-  id: string;
-  name: string;
-  typeId: TypeId;
-  relationship: string;
-  confidence: "Exploring" | "Working" | "Strong";
-}
+export type { PersonRecord } from "../../../domain/person/person";
 
 interface StoredPeople {
   version: 1;

@@ -6,7 +6,7 @@ import {
   observationsForFunction,
   removeObservation,
   restoreObservation,
-} from "../src/features/socionics/observationStorage.ts";
+} from "../frontend/src/infrastructure/persistence/local-storage/observationStorage.ts";
 
 const observation = {
   id: "observation-1",
