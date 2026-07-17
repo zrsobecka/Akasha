@@ -7,7 +7,7 @@ import {
   isSupportedType,
   type FunctionProfile,
   type TypeId,
-} from "../../../domain/socionics/socionicsModel";
+} from "../../../domain/socionics/socionicsModel.ts";
 
 export type {
   EvidenceRating,

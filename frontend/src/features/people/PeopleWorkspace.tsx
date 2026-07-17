@@ -21,6 +21,7 @@ import {
 import RelationshipView from "../relationships/RelationshipView";
 import RealLifeView from "../observations/RealLifeView";
 import TypeAnalysisView from "../type-analysis/TypeAnalysisView";
+import AkashaAtmosphere from "../../app/shell/AkashaAtmosphere";
 import {
   loadObservations,
   removeObservation,
@@ -516,6 +517,7 @@ export default function PeopleWorkspace() {
 
   return (
     <div className="socionics-shell">
+      <AkashaAtmosphere activeView={activeTab} />
       <aside className="people-rail">
         <div className="brand-lockup">
           <div className="brand-symbol">

@@ -4,7 +4,7 @@
 
 Akasha is a calm, local-first socionics laboratory. A person remains the human context; the model supports inquiry rather than issuing verdicts. Dense structures should feel inspectable, not clinical or overwhelming.
 
-The visual idea is **bio-circuit minimalism**: precise grid and trace geometry softened by organic reptile cues. Cyberpunk atmosphere comes from depth and selective luminous signals, not glowing every border.
+The visual idea is **tidal intelligence**: precise dependency geometry suspended in a quiet, deep-sea atmosphere. The network breathes and carries soft signals like conclusions moving through intuition. Organic reptile cues remain in the mark, eye geometry, ridges, and traces. Cyberpunk atmosphere comes from depth and selective luminous signals, not glowing every border.
 
 ## Principles
 
@@ -14,6 +14,7 @@ The visual idea is **bio-circuit minimalism**: precise grid and trace geometry s
 4. **Local and private.** On-device persistence is stated plainly without dominating the workspace.
 5. **Reptile, not mascot.** Crocodile cues belong in the mark, eye geometry, ridges, and traces rather than cartoon illustration.
 6. **Progressive depth.** Overview stays scannable; deep detail opens in place without losing the current structure.
+7. **Motion as inference.** Slow currents create atmosphere; faster travelling signals communicate connection and change. Motion stays behind the workspace, never competes with reading, and stops when reduced motion is requested.
 
 ## Tokens
 

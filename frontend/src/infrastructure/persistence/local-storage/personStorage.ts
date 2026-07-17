@@ -2,7 +2,7 @@ import type { PersonRecord } from "../../../domain/person/person";
 import {
   isSupportedType,
   type TypeId,
-} from "../../../domain/socionics/socionicsModel";
+} from "../../../domain/socionics/socionicsModel.ts";
 
 export type { PersonRecord } from "../../../domain/person/person";
 
