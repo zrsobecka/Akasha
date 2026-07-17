@@ -12,6 +12,10 @@ Akasha is a local-first Tauri desktop application for learning socionics through
 
 ## Architecture and data
 
+- Keep the deliberate repository structure intact: active React code belongs in `frontend/src`; active static assets in `frontend/public`; Vite runs with `frontend` as its root; and Tauri consumes `frontend/dist`. Do not move active files back to root `src/` or root `public/`.
+- Organize the frontend as a hybrid: `app/` composes the shell, `features/` owns product workflows (`people`, `type-analysis`, `observations`, `relationships`), `domain/` owns shared person, observation, and socionics concepts, and `infrastructure/` owns local-storage and LM Studio adapters. Keep feature UI free of direct storage or Tauri calls.
+- Keep durable project knowledge in `ai/`: product intent in `ai/product/`, feature boundaries in `ai/features/`, integration contracts in `ai/integrations/`, and architecture or migration context in `ai/project/`. Update the focused document instead of creating overlapping notes.
+- `src/features/tasks` and `src/features/friends` are isolated legacy prototypes, not part of the active application. Do not migrate, import, or delete them without a separate review and explicit decision.
 - Keep socionics rules in the domain model, not duplicated across React components.
 - Use uppercase MBTI-form IDs as canonical type names (`ISTP = TiSe`, `ISTJ = SiTe`). Show four-letter socionics names only as lowercase alternatives (`ISTj`, `ISTp`). Derive temperament, groups, and relations from the canonical function core rather than copying the alias's final letter.
 - Keep profiles and observations in local application storage. Never add real personal data, screenshots, exports, or local databases to Git.

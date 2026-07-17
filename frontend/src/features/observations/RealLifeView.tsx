@@ -15,14 +15,17 @@ import {
   suggestFunctionConnections,
   type FunctionSuggestion,
   type FunctionSuggestionResult,
-} from "./lmStudio";
+} from "../../infrastructure/integrations/lm-studio/lmStudio";
 import {
   createObservation,
   type EvidenceRating,
   type ObservationRecord,
-} from "./observationStorage";
-import type { PersonRecord } from "./personStorage";
-import { getTypeProfile, type FunctionProfile } from "./socionicsModel";
+} from "../../infrastructure/persistence/local-storage/observationStorage";
+import type { PersonRecord } from "../../domain/person/person";
+import {
+  getTypeProfile,
+  type FunctionProfile,
+} from "../../domain/socionics/socionicsModel";
 
 const MODEL_STORAGE_KEY = "akasha.socionics.lm-studio-model.v1";
 const RATING_OPTIONS: { value: EvidenceRating; label: string }[] = [

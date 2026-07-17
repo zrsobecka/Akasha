@@ -5,8 +5,8 @@ import {
   LmStudioError,
   parseModelIds,
   parseSuggestionResponse,
-} from "../src/features/socionics/lmStudio.ts";
-import { getTypeProfile } from "../src/features/socionics/socionicsModel.ts";
+} from "../frontend/src/infrastructure/integrations/lm-studio/lmStudio.ts";
+import { getTypeProfile } from "../frontend/src/domain/socionics/socionicsModel.ts";
 
 const istpFunctions = getTypeProfile("ISTP").functions;
 

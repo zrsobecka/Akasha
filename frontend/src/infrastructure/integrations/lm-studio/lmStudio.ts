@@ -4,7 +4,7 @@ import type {
   FunctionProfile,
   PositionId,
   TypeId,
-} from "./socionicsModel";
+} from "../../../domain/socionics/socionicsModel";
 
 const MAX_INPUT_LENGTH = 2_000;
 

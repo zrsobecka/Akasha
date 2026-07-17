@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { resolveComparisonPersonId } from "../src/features/socionics/relationshipSelection.ts";
+import { resolveComparisonPersonId } from "../frontend/src/features/relationships/relationshipSelection.ts";
 
 const people = [
   {

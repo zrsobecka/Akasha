@@ -1,4 +1,4 @@
-import type { PersonRecord } from "./personStorage.ts";
+import type { PersonRecord } from "../../domain/person/person";
 
 export function resolveComparisonPersonId(
   people: PersonRecord[],

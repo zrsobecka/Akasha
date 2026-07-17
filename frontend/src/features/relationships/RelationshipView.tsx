@@ -5,8 +5,11 @@ import {
   Sparkles,
   TriangleAlert,
 } from "lucide-react";
-import { getRelationship, getTypeProfile } from "./socionicsModel";
-import type { PersonRecord } from "./personStorage";
+import {
+  getRelationship,
+  getTypeProfile,
+} from "../../domain/socionics/socionicsModel";
+import type { PersonRecord } from "../../domain/person/person";
 
 function DirectionPanel({
   from,

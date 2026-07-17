@@ -4,7 +4,7 @@ import {
   decodePeople,
   encodePeople,
   updatePerson,
-} from "../src/features/socionics/personStorage.ts";
+} from "../frontend/src/infrastructure/persistence/local-storage/personStorage.ts";
 
 const person = {
   id: "person-1",
