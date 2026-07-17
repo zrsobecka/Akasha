@@ -9,6 +9,7 @@ import {
   UsersRound,
   X,
 } from "lucide-react";
+import akashaIcon from "../../assets/akasha-icon.png";
 import {
   useEffect,
   useRef,
@@ -517,7 +518,9 @@ export default function PeopleWorkspace() {
     <div className="socionics-shell">
       <aside className="people-rail">
         <div className="brand-lockup">
-          <div className="brand-symbol">A</div>
+          <div className="brand-symbol">
+            <img alt="" src={akashaIcon} />
+          </div>
           <div>
             <strong>AKASHA</strong>
             <span>

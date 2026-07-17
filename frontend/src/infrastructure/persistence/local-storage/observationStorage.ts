@@ -3,7 +3,11 @@ import type {
   ObservationRecord,
   ObservationTarget,
 } from "../../../domain/observation/observation";
-import { isSupportedType } from "../../../domain/socionics/socionicsModel";
+import {
+  isSupportedType,
+  type FunctionProfile,
+  type TypeId,
+} from "../../../domain/socionics/socionicsModel";
 
 export type {
   EvidenceRating,
