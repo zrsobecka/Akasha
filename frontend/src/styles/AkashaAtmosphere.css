@@ -1,0 +1,820 @@
+.socionics-shell {
+  isolation: isolate;
+  background: #050a0c;
+}
+
+.socionics-shell > .profile-workspace {
+  position: relative;
+  z-index: 1;
+}
+
+.akasha-atmosphere {
+  --field-accent: #53f6c4;
+  --field-secondary: #63b8ff;
+  --field-drift-x: 0px;
+  --field-drift-y: 0px;
+  --light-x: 72vw;
+  --light-y: 28vh;
+  position: absolute;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: paint;
+  inset: 0;
+  color: var(--field-accent);
+  background:
+    linear-gradient(rgba(163, 244, 226, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(163, 244, 226, 0.014) 1px, transparent 1px),
+    radial-gradient(
+      circle at 76% 10%,
+      rgba(27, 124, 114, 0.14),
+      transparent 35%
+    ),
+    radial-gradient(circle at 42% 78%, rgba(26, 71, 94, 0.1), transparent 38%),
+    #050a0c;
+  background-size:
+    56px 56px,
+    56px 56px,
+    auto,
+    auto,
+    auto;
+}
+
+.akasha-atmosphere[data-active-view="real-life"] {
+  --field-accent: #74f0c8;
+  --field-secondary: #45c7b8;
+}
+
+.akasha-atmosphere[data-active-view="relationships"] {
+  --field-accent: #a68cff;
+  --field-secondary: #63b8ff;
+}
+
+.akasha-atmosphere[data-active-view="groups"] {
+  --field-accent: #63b8ff;
+  --field-secondary: #53f6c4;
+}
+
+.akasha-atmosphere[data-active-view="hypothesis"] {
+  --field-accent: #a68cff;
+  --field-secondary: #f0bf66;
+}
+
+.akasha-current {
+  position: absolute;
+  width: 74vw;
+  height: 62vh;
+  opacity: 0.34;
+  filter: blur(54px);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.akasha-current-one {
+  top: -28%;
+  right: -14%;
+  background:
+    radial-gradient(
+      ellipse at 30% 55%,
+      color-mix(in srgb, var(--field-accent) 27%, transparent),
+      transparent 44%
+    ),
+    conic-gradient(
+      from 170deg at 62% 50%,
+      transparent,
+      color-mix(in srgb, var(--field-secondary) 17%, transparent),
+      transparent 42%
+    );
+  animation: akasha-current-one 19s ease-in-out infinite alternate;
+}
+
+.akasha-current-two {
+  bottom: -38%;
+  left: 12%;
+  background:
+    radial-gradient(
+      ellipse at 55% 40%,
+      rgba(24, 104, 116, 0.28),
+      transparent 48%
+    ),
+    conic-gradient(
+      from 40deg at 38% 45%,
+      transparent 8%,
+      color-mix(in srgb, var(--field-accent) 15%, transparent),
+      transparent 36%
+    );
+  animation: akasha-current-two 26s ease-in-out infinite alternate;
+}
+
+.akasha-pointer-light {
+  position: absolute;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--field-accent) 6%, transparent),
+    transparent 63%
+  );
+  opacity: 0.72;
+  transform: translate3d(
+    calc(var(--light-x) - 310px),
+    calc(var(--light-y) - 310px),
+    0
+  );
+  transition: background 250ms ease;
+  will-change: transform;
+}
+
+.akasha-dependency-field {
+  position: absolute;
+  top: 40px;
+  left: 180px;
+  width: calc(100% - 120px);
+  height: calc(100% - 20px);
+  color: var(--field-accent);
+  opacity: 0.42;
+  transform: translate3d(var(--field-drift-x), var(--field-drift-y), 0)
+    scale(1.025);
+  transition:
+    color 350ms ease,
+    transform 180ms ease-out;
+  will-change: transform;
+}
+
+.akasha-grid-lines,
+.akasha-strong-links,
+.akasha-flow-lines {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.akasha-grid-lines path {
+  stroke: url("#akasha-line");
+  stroke-width: 0.7;
+  opacity: 0.24;
+}
+
+.akasha-strong-links path {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.14;
+}
+
+.akasha-flow-lines path {
+  stroke: var(--field-secondary);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 0.018 0.982;
+  filter: url("#akasha-soft-glow");
+  opacity: 0.72;
+  animation: akasha-signal-flow 9s linear infinite;
+}
+
+.akasha-flow-lines path:nth-child(2) {
+  animation-delay: -3.7s;
+  animation-duration: 12s;
+}
+
+.akasha-flow-lines path:nth-child(3) {
+  animation-delay: -6.2s;
+  animation-duration: 10.5s;
+}
+
+.akasha-flow-lines path:nth-child(4) {
+  animation-delay: -1.4s;
+  animation-duration: 13s;
+}
+
+.akasha-nodes circle {
+  fill: var(--field-accent);
+  opacity: 0.48;
+  filter: drop-shadow(
+    0 0 5px color-mix(in srgb, var(--field-accent) 55%, transparent)
+  );
+  animation: akasha-node-breathe 5s ease-in-out infinite alternate;
+}
+
+.akasha-nodes circle:nth-child(2n) {
+  animation-delay: -2.2s;
+  animation-duration: 6.5s;
+}
+
+.akasha-inference-node circle {
+  transform-origin: center;
+}
+
+.inference-halo {
+  fill: url("#akasha-node");
+  opacity: 0.35;
+  animation: akasha-halo 7s ease-in-out infinite;
+}
+
+.inference-orbit {
+  fill: none;
+  stroke: var(--field-accent);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 8;
+  opacity: 0.34;
+  animation: akasha-orbit 28s linear infinite;
+}
+
+.inference-core-glow {
+  fill: url("#akasha-node");
+  opacity: 0.76;
+}
+
+.inference-core {
+  fill: var(--field-accent);
+  filter: drop-shadow(0 0 8px var(--field-accent));
+}
+
+.akasha-depth-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(3, 7, 8, 0.66), transparent 28%),
+    radial-gradient(
+      ellipse at center,
+      transparent 36%,
+      rgba(2, 6, 8, 0.42) 100%
+    );
+}
+
+.people-rail {
+  background:
+    linear-gradient(180deg, rgba(7, 16, 18, 0.93), rgba(5, 11, 13, 0.96)),
+    rgba(9, 14, 16, 0.94);
+  box-shadow: 14px 0 50px rgba(0, 0, 0, 0.22);
+}
+
+.people-rail::before {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 38%;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(0deg, rgba(36, 115, 105, 0.08), transparent);
+}
+
+.brand-symbol {
+  position: relative;
+  box-shadow:
+    inset 0 0 18px rgba(83, 246, 196, 0.08),
+    0 0 26px rgba(83, 246, 196, 0.1);
+}
+
+.brand-symbol::after {
+  position: absolute;
+  content: "";
+  border: 1px solid rgba(83, 246, 196, 0.18);
+  border-radius: inherit;
+  inset: 3px;
+  animation: akasha-brand-pulse 5s ease-in-out infinite;
+}
+
+.profile-topbar,
+.profile-tabs {
+  border-color: rgba(171, 255, 231, 0.08);
+  background: rgba(5, 12, 14, 0.68);
+  backdrop-filter: blur(24px) saturate(118%);
+}
+
+.profile-topbar {
+  box-shadow: inset 0 -1px rgba(255, 255, 255, 0.012);
+}
+
+.profile-tabs button {
+  transition:
+    color 180ms ease,
+    text-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.profile-tabs button:hover {
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.profile-tabs button.active {
+  color: #f2fffb;
+  text-shadow: 0 0 18px rgba(83, 246, 196, 0.22);
+}
+
+.profile-tabs button.active::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--mint) 18%,
+    #baffea 52%,
+    var(--mint) 82%,
+    transparent
+  );
+  box-shadow:
+    0 0 8px rgba(83, 246, 196, 0.56),
+    0 -5px 18px rgba(83, 246, 196, 0.1);
+  animation: akasha-tab-current 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.profile-content {
+  position: relative;
+  overflow-x: hidden;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 10, 12, 0.06),
+    rgba(4, 9, 11, 0.3)
+  );
+}
+
+.profile-content > *:not([hidden]) {
+  animation: akasha-view-arrive 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.analysis-intro h1,
+.relationship-hero h1,
+.overview-panel h1,
+.groups-view > header h1,
+.real-life-heading h1 {
+  color: transparent;
+  background: linear-gradient(112deg, #f5fffc 4%, #d8f8f0 56%, #b6dfe5 100%);
+  background-clip: text;
+  text-shadow: 0 12px 40px rgba(83, 246, 196, 0.08);
+  -webkit-background-clip: text;
+}
+
+.analysis-toolbar,
+.observation-form,
+.observation-list,
+.person-hero-card,
+.overview-grid > section,
+.group-card,
+.direction-panel,
+.relation-explanation,
+.relationship-picker {
+  border-color: rgba(171, 255, 231, 0.11);
+  background: linear-gradient(
+    145deg,
+    rgba(16, 29, 31, 0.77),
+    rgba(7, 15, 18, 0.68)
+  );
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.018),
+    0 16px 44px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(18px) saturate(112%);
+}
+
+.function-card {
+  isolation: isolate;
+  border-color: rgba(171, 255, 231, 0.105);
+  background: linear-gradient(
+    145deg,
+    rgba(18, 31, 33, 0.78),
+    rgba(7, 15, 18, 0.72)
+  );
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.018),
+    0 14px 36px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(16px);
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.function-card::before {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(
+      circle at 12% 0%,
+      rgba(83, 246, 196, 0.13),
+      transparent 40%
+    ),
+    linear-gradient(
+      115deg,
+      transparent 38%,
+      rgba(184, 255, 237, 0.035) 48%,
+      transparent 60%
+    );
+  transform: translateX(-18%);
+  transition:
+    opacity 180ms ease,
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  inset: 0;
+}
+
+.function-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(171, 255, 231, 0.23);
+  background: linear-gradient(
+    145deg,
+    rgba(21, 37, 39, 0.9),
+    rgba(8, 17, 20, 0.82)
+  );
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.025),
+    0 18px 46px rgba(0, 0, 0, 0.2),
+    0 0 30px rgba(83, 246, 196, 0.025);
+}
+
+.function-card:hover::before,
+.function-card.selected::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.function-card.selected {
+  background: linear-gradient(
+    145deg,
+    rgba(30, 70, 63, 0.42),
+    rgba(7, 18, 20, 0.88)
+  );
+  box-shadow:
+    inset 0 1px rgba(189, 255, 239, 0.07),
+    inset 0 0 36px rgba(83, 246, 196, 0.025),
+    0 18px 50px rgba(0, 0, 0, 0.18),
+    0 0 34px rgba(83, 246, 196, 0.06);
+}
+
+.function-card::after {
+  width: 92px;
+  height: 92px;
+  border-color: rgba(171, 255, 231, 0.075);
+  box-shadow:
+    0 0 0 17px rgba(171, 255, 231, 0.018),
+    0 0 0 38px rgba(171, 255, 231, 0.01);
+  transform: translate(8px, 8px);
+  transition:
+    border-color 180ms ease,
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.function-card:hover::after,
+.function-card.selected::after {
+  border-color: rgba(83, 246, 196, 0.16);
+  transform: translate(0, 0);
+}
+
+.analysis-inspector,
+.group-inspector {
+  border-color: rgba(171, 255, 231, 0.17);
+  background: linear-gradient(
+    155deg,
+    rgba(15, 29, 31, 0.91),
+    rgba(6, 14, 16, 0.88)
+  );
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.025),
+    -18px 26px 72px rgba(0, 0, 0, 0.22),
+    0 0 46px rgba(83, 246, 196, 0.035);
+  backdrop-filter: blur(26px) saturate(118%);
+}
+
+@keyframes akasha-current-one {
+  from {
+    transform: translate3d(-4%, -2%, 0) rotate(-4deg) scale(0.94);
+  }
+  to {
+    transform: translate3d(7%, 8%, 0) rotate(5deg) scale(1.08);
+  }
+}
+
+@keyframes akasha-current-two {
+  from {
+    transform: translate3d(-6%, 5%, 0) rotate(3deg) scale(1.06);
+  }
+  to {
+    transform: translate3d(8%, -6%, 0) rotate(-5deg) scale(0.95);
+  }
+}
+
+@keyframes akasha-signal-flow {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes akasha-node-breathe {
+  from {
+    opacity: 0.22;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 0.62;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes akasha-halo {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.78);
+  }
+  50% {
+    opacity: 0.46;
+    transform: scale(1.14);
+  }
+}
+
+@keyframes akasha-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes akasha-brand-pulse {
+  0%,
+  100% {
+    opacity: 0.34;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+}
+
+@keyframes akasha-tab-current {
+  from {
+    opacity: 0;
+    transform: scaleX(0.16);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes akasha-view-arrive {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (max-width: 920px) {
+  .akasha-dependency-field {
+    left: 20px;
+    width: calc(100% + 100px);
+    opacity: 0.3;
+  }
+
+  .akasha-current {
+    width: 110vw;
+  }
+}
+
+@media (max-width: 680px) {
+  .akasha-atmosphere {
+    position: fixed;
+  }
+
+  .akasha-dependency-field {
+    left: -180px;
+    width: calc(100% + 360px);
+    opacity: 0.2;
+  }
+
+  .akasha-current {
+    opacity: 0.22;
+    filter: blur(68px);
+  }
+
+  .profile-topbar,
+  .profile-tabs {
+    background: rgba(5, 12, 14, 0.91);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .akasha-current,
+  .akasha-flow-lines path,
+  .akasha-nodes circle,
+  .akasha-inference-node circle,
+  .brand-symbol::after,
+  .profile-tabs button.active::after,
+  .profile-content > *:not([hidden]) {
+    animation: none !important;
+  }
+
+  .akasha-dependency-field,
+  .akasha-pointer-light {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Stronger authored depth after the first rendered quality pass. */
+.akasha-atmosphere {
+  background:
+    linear-gradient(rgba(163, 244, 226, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(163, 244, 226, 0.021) 1px, transparent 1px),
+    radial-gradient(
+      circle at 76% 10%,
+      rgba(27, 124, 114, 0.19),
+      transparent 35%
+    ),
+    radial-gradient(circle at 42% 78%, rgba(26, 71, 94, 0.14), transparent 38%),
+    #050a0c;
+  background-size:
+    56px 56px,
+    56px 56px,
+    auto,
+    auto,
+    auto;
+}
+
+.akasha-atmosphere::before {
+  position: absolute;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+  opacity: 0.3;
+  background: repeating-radial-gradient(
+    ellipse at 78% -8%,
+    transparent 0 58px,
+    color-mix(in srgb, var(--field-accent) 16%, transparent) 60px 61px,
+    transparent 65px 116px
+  );
+  mask-image: linear-gradient(
+    145deg,
+    transparent 12%,
+    black 42%,
+    transparent 82%
+  );
+  inset: -18%;
+  animation: akasha-caustics 23s ease-in-out infinite alternate;
+}
+
+.akasha-current {
+  z-index: 0;
+}
+
+.akasha-pointer-light {
+  z-index: 2;
+}
+
+.akasha-dependency-field {
+  z-index: 1;
+  opacity: 0.64;
+}
+
+.akasha-grid-lines path {
+  opacity: 0.38;
+}
+
+.akasha-strong-links path {
+  opacity: 0.24;
+}
+
+.akasha-depth-vignette {
+  z-index: 3;
+}
+
+.people-list button {
+  border: 1px solid transparent;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.people-list button:hover {
+  transform: translateX(2px);
+}
+
+.people-list button.active {
+  border-color: rgba(83, 246, 196, 0.1);
+  background: linear-gradient(
+    90deg,
+    rgba(83, 246, 196, 0.1),
+    rgba(45, 115, 112, 0.035) 68%,
+    transparent
+  );
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.018),
+    0 10px 34px rgba(0, 0, 0, 0.13),
+    0 0 28px rgba(83, 246, 196, 0.025);
+}
+
+.people-list button.active::before {
+  box-shadow:
+    0 0 8px rgba(83, 246, 196, 0.8),
+    0 0 22px rgba(83, 246, 196, 0.35);
+  animation: akasha-active-person 3.4s ease-in-out infinite;
+}
+
+.analysis-intro,
+.relationship-hero,
+.real-life-heading,
+.groups-view > header {
+  position: relative;
+}
+
+.analysis-intro::after,
+.relationship-hero::after,
+.real-life-heading::after,
+.groups-view > header::after {
+  position: absolute;
+  z-index: -1;
+  top: -70px;
+  right: -40px;
+  width: 420px;
+  height: 220px;
+  content: "";
+  pointer-events: none;
+  opacity: 0.48;
+  background: radial-gradient(
+    ellipse,
+    color-mix(in srgb, var(--mint) 9%, transparent),
+    transparent 66%
+  );
+  filter: blur(8px);
+}
+
+.type-summary {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(83, 246, 196, 0.18);
+  background: linear-gradient(
+    145deg,
+    rgba(25, 52, 49, 0.44),
+    rgba(7, 16, 19, 0.74)
+  );
+  box-shadow:
+    inset 0 1px rgba(204, 255, 243, 0.035),
+    0 16px 46px rgba(0, 0, 0, 0.16),
+    0 0 36px rgba(83, 246, 196, 0.045);
+  backdrop-filter: blur(18px);
+}
+
+.type-summary::after {
+  position: absolute;
+  width: 70%;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent,
+    rgba(192, 255, 239, 0.08),
+    transparent
+  );
+  transform: translateX(-160%) skewX(-14deg);
+  inset: 0 auto 0 0;
+  animation: akasha-summary-sweep 8s ease-in-out infinite;
+}
+
+@keyframes akasha-caustics {
+  from {
+    transform: translate3d(-3%, -1%, 0) rotate(-2deg) scale(0.98);
+  }
+  to {
+    transform: translate3d(4%, 3%, 0) rotate(2deg) scale(1.05);
+  }
+}
+
+@keyframes akasha-active-person {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scaleY(0.66);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes akasha-summary-sweep {
+  0%,
+  72% {
+    transform: translateX(-160%) skewX(-14deg);
+  }
+  100% {
+    transform: translateX(260%) skewX(-14deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .akasha-atmosphere::before,
+  .people-list button.active::before,
+  .type-summary::after {
+    animation: none !important;
+  }
+}

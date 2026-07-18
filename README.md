@@ -78,7 +78,7 @@ Use `-Publish` after approving the icon to rebuild the executable and refresh it
 
 ## Project documentation
 
-- [Codebase map](CODEBASE.md)
+- [Architecture and codebase map](ai/project/ARCHITECTURE.md)
 - [Data and AI workflow](WORKFLOW-DIAGRAM.md)
 - [Product direction](docs/socionics-product-plan.md)
 - [ISTP type-analysis reference](docs/type-analysis-wireframe-istp.md)
